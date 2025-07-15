@@ -5,6 +5,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.Where;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -14,25 +16,20 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Where(clause = "flag_deleted = false")
-@Table(name = "app_user")
+@Table(name = "order")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserEntity extends BaseEntity{
+public class OrderEntity extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
 
-    String username;
+    String code;
 
-    String password;
+    LocalDateTime dateTime;
+
+    @Column(columnDefinition = "NTEXT")
+    String note;
 
     Boolean flagDeleted;
-
-    Boolean flagOnline;
-
-    @OneToOne(mappedBy = "userEntity")
-    EmployeeEntity employeeEntity;
-
-    @OneToOne(mappedBy = "userEntity")
-    CustomerEntity customerEntity;
 }
