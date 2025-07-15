@@ -10,7 +10,7 @@ import lombok.Setter;
 @Table(name = "prescription")
 public class Prescription {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
     private String code;
@@ -19,6 +19,8 @@ public class Prescription {
     private String note;
     private Integer duration;
     private boolean flag_deleted;
-    private Long patient_id;
+    @ManyToOne()
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
 
 }

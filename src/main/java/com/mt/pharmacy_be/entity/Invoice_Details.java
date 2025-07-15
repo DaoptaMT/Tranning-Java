@@ -7,18 +7,28 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "unit_detail")
-public class Unit_Detail {
+@Table(name = "invoice_details")
+public class Invoice_Details {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private Float discount;
+
+    private Integer medicine_quantity;
+
+    private String lot;
+
     private boolean flag_deleted;
-    private Long conversion_unit;
-    @ManyToOne()
+    @ManyToOne
+    @JoinColumn(name = "invoice_id")
+    private InvoiceEntity invoiceEntity;
+    @ManyToOne
     @JoinColumn(name = "medicine_id")
     private Medicine medicine;
-    @ManyToOne()
-    @JoinColumn(name = "unit_id")
-    private Unit unit;
+
+
+
 
 }

@@ -10,7 +10,7 @@ import lombok.Setter;
 @Table(name = "medicine")
 public class Medicine {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String code;
     private String name;
@@ -20,9 +20,11 @@ public class Medicine {
     private String note;
     private String maker;
     private String origin;
-    private Float retail_profit;
-    private Float kind_of_medicine_id;
-    private boolean flag_deleted;
-    private String active_element;
+    private Float retailProfit;
+    @ManyToOne()
+    @JoinColumn(name = "kind_of_medicine_id")
+    private Kind_Of_Medicine kindOfMedicine;
+    private boolean flagDeleted;
+    private String activeElement;
 
 }

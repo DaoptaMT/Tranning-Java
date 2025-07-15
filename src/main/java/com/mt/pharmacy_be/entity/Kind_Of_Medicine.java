@@ -10,7 +10,7 @@ import lombok.Setter;
 @Table(name = "kind_of_medicine")
 public class Kind_Of_Medicine {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String code;
     private String name;

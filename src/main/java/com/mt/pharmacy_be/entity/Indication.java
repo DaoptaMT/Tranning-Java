@@ -10,12 +10,16 @@ import lombok.Setter;
 @Table(name = "indication")
 public class Indication {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer dosage;
     private Integer frequency;
     private boolean flag_deleted;
-    private Long medicine_id;
-    private Long perscription_id;
+    @ManyToOne()
+    @JoinColumn(name = "medicine_id")
+    private  Medicine medicine;
+    @ManyToOne()
+    @JoinColumn(name = "perscription_id")
+    private Prescription prescription;
 
 }
