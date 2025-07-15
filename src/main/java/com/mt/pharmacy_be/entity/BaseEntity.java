@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
@@ -15,21 +16,20 @@ import java.time.LocalDateTime;
 @Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public abstract class BaseEntity {
 
-    @Column(name="nguoiTao",updatable = false)
+    @Column(updatable = false)
     @CreatedBy
-    private String createdBy;
+    String createdBy;
 
-    @Column(name="ngayTao", updatable = false)
+    @Column(updatable = false)
     @CreationTimestamp
-    private LocalDateTime createdDate;
+    LocalDateTime createdDate;
 
-    @Column(name="ngaySua")
     @UpdateTimestamp
-    private LocalDateTime modifiedDate;
+    LocalDateTime modifiedDate;
 
-    @Column(name="nguoiSua")
     @LastModifiedBy
-    private String modifiedBy;
+    String modifiedBy;
 }
