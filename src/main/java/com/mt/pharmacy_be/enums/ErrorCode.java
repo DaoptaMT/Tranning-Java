@@ -34,6 +34,7 @@ public enum ErrorCode {
     INVALID_OLD_PASSWORD(1006, "Mật khẩu hiện tại không chính xác", HttpStatus.BAD_REQUEST),
     OLD_PASSWORD_INVALID(1007, "old password invalid", HttpStatus.BAD_REQUEST),
     NEW_PASSWORD_INVALID(1008, "new password invalid", HttpStatus.BAD_REQUEST),
+    USERNAME_INVALID(1009, "Username invalid", HttpStatus.BAD_REQUEST),
     ;
 
     Integer code;
