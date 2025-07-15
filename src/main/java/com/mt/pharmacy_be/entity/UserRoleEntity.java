@@ -1,6 +1,5 @@
 package com.mt.pharmacy_be.entity;
 
-import com.mt.pharmacy_be.enums.RoleType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -13,16 +12,19 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor
 @AllArgsConstructor
 @Where(clause = "flag_deleted = false")
-@Table(name = "app_role")
+@Table(name = "user_role")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RoleEntity extends BaseEntity {
+public class UserRoleEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Enumerated(EnumType.STRING)
-    RoleType name;
+    @ManyToOne()
+    @JoinColumn(name = "app_user_id")
+    UserEntity userEntity;
 
-    Boolean flagDeleted;
+    @ManyToOne()
+    @JoinColumn(name = "app_role_id")
+    RoleEntity roleEntity;
 }
