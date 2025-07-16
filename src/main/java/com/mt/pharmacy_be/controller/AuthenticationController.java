@@ -3,6 +3,7 @@ package com.mt.pharmacy_be.controller;
 import com.mt.pharmacy_be.dto.authenticationDTO.AuthenticationRequestDTO;
 import com.mt.pharmacy_be.service.AuthenticationService;
 import com.mt.pharmacy_be.util.JsonResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -32,5 +33,16 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody @Valid AuthenticationRequestDTO request){
         return JsonResponse.ok(authenticationService.login(request));
+    }
+
+    /**
+     * Handles user registration requests.
+     * Author: Thanh Truc
+     * Date: 16/07/2025
+     * Description: This endpoint processes user registration by creating a new user account
+     */
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(HttpServletRequest request) {
+        return JsonResponse.ok(authenticationService.refreshToken(request));
     }
 }

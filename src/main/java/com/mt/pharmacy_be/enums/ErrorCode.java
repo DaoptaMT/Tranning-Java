@@ -35,6 +35,7 @@ public enum ErrorCode {
     OLD_PASSWORD_INVALID(1007, "old password invalid", HttpStatus.BAD_REQUEST),
     NEW_PASSWORD_INVALID(1008, "new password invalid", HttpStatus.BAD_REQUEST),
     USERNAME_INVALID(1009, "Username invalid", HttpStatus.BAD_REQUEST),
+    TOKEN_NOT_BLANK(1010, "Token must be not blank", HttpStatus.BAD_REQUEST),
     ;
 
     Integer code;

@@ -10,6 +10,8 @@ import com.mt.pharmacy_be.repository.UserRepository;
 import com.mt.pharmacy_be.service.AuthenticationService;
 import com.mt.pharmacy_be.service.JwtService;
 import com.mt.pharmacy_be.service.RedisTokenService;
+import io.micrometer.common.util.StringUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,6 +50,34 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String refreshToken = jwtService.generateRefreshToken(user);
 
         return buildAuthenticationResponse(user, accessToken, refreshToken, "Login success");
+    }
+
+    /**
+     * Refreshes the user's access token using the provided refresh token.
+     * Author: Thanh Truc
+     * Date: 16/07/2025
+     * Description: This method validates the refresh token and generates a new access token if valid.
+     */
+    @Override
+    public AuthenticationResponseDTO refreshToken(HttpServletRequest request) {
+        String refreshToken = request.getHeader("x-token");
+        if (StringUtils.isBlank(refreshToken)) {
+            throw new ApiException(ErrorCode.TOKEN_NOT_BLANK);
+        }
+
+        final String email = jwtService.extractUsername(refreshToken, TokenType.REFRESH_TOKEN);
+
+        UserEntity user = userRepository.findByUsername(email)
+                .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
+
+        if (!jwtService.isTokenValid(refreshToken, user, TokenType.REFRESH_TOKEN)) {
+            throw new ApiException(ErrorCode.INVALID_TOKEN);
+        }
+
+        String accessToken = jwtService.generateToken(user);
+
+        return buildAuthenticationResponse(user, accessToken, refreshToken,
+                "Refresh token success");
     }
 
     /**
