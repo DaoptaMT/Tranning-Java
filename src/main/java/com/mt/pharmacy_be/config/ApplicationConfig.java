@@ -1,11 +1,13 @@
 package com.mt.pharmacy_be.config;
 
+import com.mt.pharmacy_be.aditing.ApplicationAudiAware;
 import com.mt.pharmacy_be.enums.ErrorCode;
 import com.mt.pharmacy_be.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -39,8 +41,8 @@ public class ApplicationConfig {
      * Description: Uses AuthenticationConfiguration to manage authentication process.
      */
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 
     /**
@@ -52,5 +54,16 @@ public class ApplicationConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    /**
+     * Provides AuditorAware to track the current auditor.
+     * Author: Thanh Truc
+     * Date: 16/07/2025
+     * Description: Returns an instance of ApplicationAudiAware to manage auditing information.
+     */
+    @Bean
+    public AuditorAware<String> auditorAware(){
+        return new ApplicationAudiAware();
     }
 }

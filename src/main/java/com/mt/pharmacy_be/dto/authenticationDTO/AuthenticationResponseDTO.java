@@ -19,7 +19,7 @@ public class AuthenticationResponseDTO {
     @Enumerated(EnumType.STRING)
     TokenType tokenType;
     UUID id;
-    String email;
+    String username;
     String roles;
     String message;
     @JsonProperty("accessToken")

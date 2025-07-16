@@ -8,6 +8,10 @@ spring:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+  data:
+    redis:
+      host: ${RD_HOST}
+      port: ${RD_PORT}
   jpa:
     hibernate:
       ddl-auto: validate

@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthenticationRequestDTO {
 
-    @Email(message = "USERNAME_INVALID")
+    @NotBlank(message = "USERNAME_INVALID")
     String username;
 
     @NotBlank(message = "PASSWORD_INVALID")

@@ -70,7 +70,7 @@ public class JwtServiceImpl implements JwtService {
      */
     @Override
     public String generateRefreshToken(UserDetails userDetails) {
-        long refreshExpiration = 2592000000L; // 30 days by default
+        long refreshExpiration = 604800000L; // 7 days by default
         return buildToken(new HashMap<>(), userDetails, refreshExpiration, TokenType.REFRESH_TOKEN);
     }
 
@@ -101,6 +101,13 @@ public class JwtServiceImpl implements JwtService {
                 .compact();
     }
 
+    /**
+     * Retrieves the signing key based on the token type.
+     * Author: Thanh Truc
+     * Date: 15/07/2025
+     * Description: This method returns the appropriate signing key for the given token type,
+     * either access or refresh token.
+     */
     private Key getKey(TokenType tokenType) {
         byte[] keyBytes = new byte[0];
         if (tokenType.equals(TokenType.ACCESS_TOKEN)) {

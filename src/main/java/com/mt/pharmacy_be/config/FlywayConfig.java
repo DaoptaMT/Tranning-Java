@@ -29,6 +29,12 @@ public class FlywayConfig {
     @Value("${spring.datasource.password}")
     String dataSourcePassword;
 
+    /**
+     * Function: Configures and initializes Flyway for database migration.
+     * Author: Thanh Truc
+     * Date: 15/07/2025
+     * Description: Ensures database existence, repairs Flyway schema history if needed, and executes migrations.
+     */
     @Bean
     public Flyway flyway() {
         createDatabaseIfNotExists();
@@ -42,6 +48,12 @@ public class FlywayConfig {
         return flyway;
     }
 
+    /**
+     * Function: Provides a DataSource bean for Flyway and other database operations.
+     * Author: Thanh Truc
+     * Date: 15/07/2025
+     * Description: Configures and returns a DriverManagerDataSource using properties from application configuration.
+     */
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -51,6 +63,13 @@ public class FlywayConfig {
         return dataSource;
     }
 
+    /**
+     * Function: Creates the database if it does not already exist.
+     * Author: Thanh Truc
+     * Date: 15/07/2025
+     * Description: Extracts base URL and database name from datasource URL, connects to the server,
+     *              and executes a CREATE DATABASE IF NOT EXISTS statement.
+     */
     private void createDatabaseIfNotExists() {
         String baseUrl = dataSourceUrl.substring(0, dataSourceUrl.lastIndexOf('/'));
         String databaseName = dataSourceUrl.substring(dataSourceUrl.lastIndexOf('/') + 1);
