@@ -28,3 +28,10 @@ jwt:
   secret-key : ${JWT_SECRET_KEY}
   refresh-key : ${JWT_REFRESH_KEY}
 
+springdoc:
+  swagger-ui:
+    url: /openapi.yml    # Đường dẫn public tới file YAML (qua HTTP)
+    path: /swagger-ui.html
+  api-docs:
+    enabled: true        # Tắt tự động sinh API docs từ annotation nếu muốn
+

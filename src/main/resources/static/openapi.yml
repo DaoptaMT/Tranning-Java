@@ -1,0 +1,2972 @@
+openapi: 3.0.4
+info:
+  title: Role API
+  version: 1.0.0
+  description: API quản lý Role, mọi request đều yêu cầu JWT Token.
+
+servers:
+  - url: http://localhost:8080/api/v1
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    RoleRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Name of the role
+        flag_deleted:
+          type: boolean
+          default: false
+          description: Soft delete flag
+
+    RoleResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        flag_deleted:
+          type: boolean
+
+    UserRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          description: Username (required)
+        password:
+          type: string
+          format: password
+          description: Password (required)
+        flag_deleted:
+          type: boolean
+          default: false
+          description: Soft delete status (default is false)
+        flag_online:
+          type: boolean
+          default: false
+          description: Online status (default is false)
+        phone_number:
+          type: string
+          nullable: true
+          description: Phone number (optional)
+        code:
+          type: string
+          nullable: true
+          description: Code (optional)
+        iamge:
+          type: string
+          nullable: true
+          description: Avatar (optional)
+        name:
+          type: string
+          nullable: true
+          description: Name (optional)
+        address:
+          type: string
+          nullable: true
+          description: Address (optional)
+        birthday:
+            type: string
+            format: date
+            nullable: true
+            description: Date of birth (optional)
+        startday:
+          type: string
+          format: date
+          nullable: true
+          description: Start date (optional)
+        card_id:
+          type: string
+          nullable: true
+          description: ID card number (optional)
+        note:
+          type: string
+          nullable: true
+          description: Note (optional)
+    UserResponse:
+        type: object
+        properties:
+          id:
+            type: integer
+          username:
+            type: string
+          flag_deleted:
+            type: boolean
+            description: Soft delete status
+          flag_online:
+            type: boolean
+            description: Online status
+          phone_number:
+            type: string
+            description: Phone number
+          note:
+            type: string
+            description: Note
+          cart_id:
+            type: string
+            description: Cart ID
+          startday:
+            type: string
+            format: date
+            description: Start date
+          birthday:
+            type: string
+            format: date
+            description: Date of birth
+          address:
+            type: string
+            description: Address
+          name:
+            type: string
+            description: Name
+          image:
+            type: string
+            description: Avatar
+          code:
+            type: string
+            description: Code
+    PatientRequest:
+        type: object
+        required:
+          - name
+        properties:
+          name:
+            type: string
+            description: Name of the patient
+          flag_deleted:
+            type: boolean
+            default: false
+            description: Soft delete flag
+
+    PatientResponse:
+        type: object
+        properties:
+          id:
+            type: integer
+          name:
+            type: string
+          flag_deleted:
+            type: boolean
+            description: Soft delete flag
+    UnitRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Name of the unit
+        flag_deleted:
+          type: boolean
+          default: false
+          description: Soft delete flag
+
+    UnitResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        flag_deleted:
+          type: boolean
+          description: Soft delete flag
+    KindRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Name of the medicine type
+        flag_deleted:
+          type: boolean
+          default: false
+          description: Soft delete flag
+        code:
+          type: string
+          description: Identifier code of the medicine type (optional)
+
+    KindResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        flag_deleted:
+          type: boolean
+        code:
+            type: string
+            description: Identifier code of the medicine type (optional)
+
+    SupplierRequest:
+      type: object
+      required:
+        - code
+        - name
+      properties:
+        code:
+          type: string
+          description: Identifier code of the supplier (required)
+        name:
+          type: string
+          description: Supplier name (required)
+        flag_deleted:
+          type: boolean
+          default: false
+          description: Soft delete flag (default is false)
+        flag_online:
+          type: boolean
+          default: false
+          description: Online status flag (default is false)
+        phone_number:
+          type: string
+          nullable: true
+          description: Phone number (optional)
+        address:
+          type: string
+          nullable: true
+          description: Supplier address (optional)
+        note:
+          type: string
+          nullable: true
+          description: Internal note (optional)
+        email:
+          type: string
+          nullable: true
+          description: Contact email (optional)
+
+    SupplierResponse:
+        type: object
+        properties:
+          id:
+            type: integer
+          code:
+            type: string
+          name:
+            type: string
+          flag_deleted:
+            type: boolean
+          flag_online:
+            type: boolean
+          phone_number:
+            type: string
+          address:
+            type: string
+          note:
+            type: string
+          email:
+            type: string
+
+    InvoiceRequest:
+      type: object
+      required:
+        - code
+        - document_number
+        - create_date
+        - paid
+        - app_user_id
+        - supplier_id
+      properties:
+        code:
+          type: string
+          description: Invoice code (required)
+        document_number:
+          type: string
+          description: Document number (required)
+        create_date:
+          type: string
+          format: date-time
+          description: Invoice creation date (required)
+        paid:
+          type: boolean
+          description: Payment status (required)
+        app_user_id:
+          type: integer
+          description: User ID who created the invoice (required)
+        supplier_id:
+          type: integer
+          description: Related supplier ID (required)
+        flag_deleted:
+          type: boolean
+          default: false
+          description: Soft delete flag (default is false)
+        phone_number:
+          type: string
+          nullable: true
+          description: Phone number (optional)
+        address:
+          type: string
+          nullable: true
+          description:  Address (optional)
+        note:
+          type: string
+          nullable: true
+          description: Note (optional)
+        email:
+          type: string
+          nullable: true
+          description: Contact email (optional)
+
+      InvoiceResponse:
+        type: object
+        properties:
+          id:
+            type: integer
+          code:
+            type: string
+          document_number:
+            type: string
+          create_date:
+            type: string
+            format: date-time
+          paid:
+            type: boolean
+          app_user_id:
+            type: integer
+          supplier_id:
+            type: integer
+          flag_deleted:
+            type: boolean
+          phone_number:
+            type: string
+          address:
+            type: string
+          note:
+            type: string
+          email:
+            type: string
+
+
+    MedicineRequest:
+      type: object
+      required:
+        - code
+        - name
+        - price
+        - kind_of_medicine_id
+      properties:
+        code:
+          type: string
+          description: Medicine code (required)
+        name:
+          type: string
+          description: Medicine name (required)
+        price:
+          type: number
+          format: double
+          description: Medicine price (required)
+        kind_of_medicine_id:
+          type: integer
+          description: Medicine type ID (required)
+        quantity:
+          type: number
+          nullable: true
+          description: Stock quantity (optional)
+        vat:
+          type: number
+          nullable: true
+          description: VAT tax (%) (optional)
+        maker:
+          type: string
+          nullable: true
+          description: Manufacturer (optional)
+        origin:
+          type: string
+          nullable: true
+          description: Origin (optional)
+        retail_profit:
+          type: number
+          nullable: true
+          description: Retail profit (optional)
+        flag_deleted:
+          type: boolean
+          default: false
+          description: Soft delete flag (default is false)
+        symptoms:
+          type: string
+          nullable: true
+          description: Symptoms treated (optional)
+        duration:
+          type: string
+          nullable: true
+          description: Treatment duration (optional)
+        note:
+          type: string
+          nullable: true
+          description: Additional notes (optional)
+        active_element:
+          type: string
+          nullable: true
+          description: Active ingredient (optional)
+
+    MedicineResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+          format: double
+        kind_of_medicine_id:
+          type: integer
+        quantity:
+          type: number
+        vat:
+          type: number
+        maker:
+          type: string
+        origin:
+          type: string
+        retail_profit:
+          type: number
+        flag_deleted:
+          type: boolean
+        symptoms:
+          type: string
+        duration:
+          type: string
+        note:
+          type: string
+        active_element:
+          type: string
+
+    OrderRequest:
+      type: object
+      required:
+        - code
+        - date_time
+      properties:
+        code:
+          type: string
+          description: Order code (required)
+        date_time:
+          type: string
+          format: date-time
+          description: Order creation date and time (required)
+        flag_deleted:
+          type: boolean
+          default: false
+          description: Soft delete flag (default is false)
+        note:
+          type: string
+          nullable: true
+          description: Order note (optional)
+
+    OrderResponse:
+        type: object
+        properties:
+          id:
+            type: integer
+          code:
+            type: string
+          date_time:
+            type: string
+            format: date-time
+          flag_deleted:
+            type: boolean
+          note:
+            type: string
+
+    CartDetailsRequest:
+      type: object
+      required:
+        - app_user_id
+        - medicine_id
+        - quantity
+      properties:
+        app_user_id:
+          type: integer
+          description: ID người dùng (bắt buộc)
+        medicine_id:
+          type: integer
+          description: ID sản phẩm (bắt buộc)
+        quantity:
+          type: integer
+          description: Số lượng (bắt buộc)
+
+      CartDetailsResponse:
+        type: object
+        properties:
+          id:
+            type: integer
+          app_user_id:
+            type: integer
+          medicine_id:
+            type: integer
+          quantity:
+            type: integer
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+
+security:
+  - bearerAuth: []
+
+
+
+paths:
+  /roles:
+    get:
+      tags:
+        - Roles
+      summary: Get list of all roles
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Get role list successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoleResponse'
+              examples:
+                roleList:
+                  value:
+                    - id: 1
+                      name: "Admin"
+                      flag_deleted: false
+                    - id: 2
+                      name: "User"
+                      flag_deleted: false
+
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              shema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+
+    post:
+      tags:
+        - Roles
+      summary: Create a new role
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleRequest'
+      responses:
+        '201':
+          description: Role created successfully
+          content:
+              application/json:
+                schema:
+                    $ref: '#/components/schemas/RoleResponse'
+                examples:
+                  roleCreated:
+                    value:
+                      id: 1
+                      name: "Admin"
+                      flag_deleted: false
+        '400':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidData:
+                  value:
+                    error: "Invalid data: 'name' is required"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              shema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+  /roles/{id}:
+    get:
+      tags:
+        - Roles
+      summary: Get role by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Role details returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleResponse'
+              examples:
+                roleDetail:
+                  value:
+                    id: 1
+                    name: "Admin"
+                    flag_deleted: false
+
+        '404':
+          description: Role not found
+          content:
+              application/json:
+                schema:
+                    $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                    notFound:
+                    value:
+                        error: "Role not found"
+        '401':
+          description: Invalid or missing token
+          content:
+              application/json:
+                schema:
+                    $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                    unauthorized:
+                    value:
+                        error: "Unauthorized"
+    put:
+      tags:
+        - Roles
+      summary: Update role by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleRequest'
+      responses:
+        '200':
+          description: Update role successfully
+          content:
+              application/json:
+                schema:
+                    $ref: '#/components/schemas/RoleResponse'
+                examples:
+                    roleUpdated:
+                    value:
+                        id: 1
+                        name: "Admin Updated"
+                        flag_deleted: false
+        '400':
+          description: Data is invalid (missing name)
+          content:
+              application/json:
+                schema:
+                    $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                    invalidData:
+                    value:
+                        error: "Invalid data: 'name' is required"
+        '404':
+          description: Role not found
+          content:
+              application/json:
+                schema:
+                    $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                    notFound:
+                    value:
+                        error: "Role not found"
+        '401':
+          description: Invalid or missing token
+          content:
+              application/json:
+                schema:
+                    $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                    unauthorized:
+                    value:
+                        error: "Unauthorized"
+
+
+    delete:
+      tags:
+        - Roles
+      summary: Soft delete role by ID (set flag_deleted=true)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Role soft deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Role deleted successfully"
+                examples:
+                  roleDeleted:
+                    value:
+                      message: "Role deleted successfully"
+        '404':
+          description: Role not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                notFound:
+                  value:
+                    error: "Role not found"
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+
+  /user:
+    get:
+      tags:
+        - Users
+      summary: Get list of all users
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Get user list successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+              examples:
+                userList:
+                  value:
+                    - id: 1
+                      username: "admin"
+                      flag_deleted: false
+                      flag_online: true
+                      birthday: "1990-01-01"
+                      startday: "2020-01-01"
+                      address: "123 Main St"
+                      image: "http://example.com/avatar.jpg"
+                      code: "USR001"
+                      cart_id: "CART123"
+                      name: "Admin User"
+                    - id: 2
+                      username: "user"
+                      flag_deleted: false
+                      flag_online: false
+                      birthday: "1992-02-02"
+                      startday: "2021-02-01"
+                      address: "456 Elm St"
+                      image: "http://example.com/avatar2.jpg"
+                      code: "USR002"
+                      cart_id: "CART456"
+                      name: "Regular User"
+
+
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+
+    post:
+      tags:
+        - Users
+      summary: Create a new user
+      security: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '201':
+          description: Create user successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+              examples:
+                userCreated:
+                  value:
+                    id: 1
+                    username: "newuser"
+                    flag_deleted: false
+                    flag_online: false
+                    birthday: "1995-03-03"
+                    startday: "2022-03-01"
+                    address: "789 Oak St"
+                    image: "http://example.com/avatar3.jpg"
+                    code: "USR003"
+                    cart_id: "CART789"
+                    name: "New User"
+        '400':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidData:
+                  value:
+                    error: "Invalid data: 'username' and 'password' are required"
+
+  /user/{id}:
+      get:
+        tags:
+            - Users
+        summary: Get user by ID
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Information of user returned successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UserResponse'
+                examples:
+                  userDetail:
+                    value:
+                      id: 1
+                      username: "admin"
+                      flag_deleted: false
+                      flag_online: true
+                      phone_number: "0123456789"
+                      birthday: "1990-01-01"
+                      startday: "2020-01-01"
+                      address: "123 Main St"
+                      image: "http://example.com/avatar.jpg"
+                      code: "USR001"
+                      name: "Admin User"
+                      cart_id: "CART123"
+          '404':
+            description: Information of user not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  notFound:
+                    value:
+                      error: "User not found"
+          '401':
+            description: Invalid or missing token
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  unauthorized:
+                    value:
+                      error: "Unauthorized"
+
+      put:
+        tags:
+            - Users
+        summary: Update user by ID
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRequest'
+        responses:
+          '200':
+            description: Update user successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UserResponse'
+                examples:
+                  userUpdated:
+                    value:
+                        id: 1
+                        username: "admin_updated"
+                        flag_deleted: false
+                        flag_online: true
+                        phone_number: "0987654321"
+                        birthday: "1990-01-01"
+                        startday: "2020-01-01"
+                        address: "123 Main St Updated"
+                        image: "http://example.com/avatar_updated.jpg"
+                        code: "USR001_UPDATED"
+                        name: "Admin User Updated"
+                        cart_id: "CART123_UPDATED"
+
+          '400':
+            description: Invalid data (missing username or password)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  invalidData:
+                    value:
+                      error: "Invalid data: 'username' and 'password' are required"
+
+          '404':
+            description: User not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  notFound:
+                    value:
+                      error: "User not found"
+          '401':
+            description: invalid or missing token
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  unauthorized:
+                    value:
+                      error: "Unauthorized"
+
+      delete:
+        tags:
+            - Users
+        summary: Soft delete user by ID (set flag_deleted=true)
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Soft delete user successfully
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: "User deleted successfully"
+                examples:
+                  userDeleted:
+                    value:
+                      message: "User deleted successfully"
+          '404':
+            description: User not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  notFound:
+                    value:
+                      error: "User not found"
+          '401':
+            description: Invalid or missing token
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  unauthorized:
+                    value:
+                      error: "Unauthorized"
+
+  /patients:
+    get:
+      tags:
+        - Patients
+      summary: Get list of all patients
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Get patient list successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PatientResponse'
+              examples:
+                patientList:
+                  value:
+                    - id: 1
+                      name: "Nguyen Van A"
+                      flag_deleted: false
+                    - id: 2
+                      name: "Tran Thi B"
+                      flag_deleted: false
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+
+    post:
+      tags:
+        - Patients
+      summary: Create a new patient
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientRequest'
+      responses:
+        '201':
+          description: Create patient successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientResponse'
+              examples:
+                patientCreated:
+                  value:
+                    id: 1
+                    name: "Nguyen Van A"
+                    flag_deleted: false
+        '400':
+          description: Invalid data (missing name)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidData:
+                  value:
+                    error: "Invalid data: 'name' is required"
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+
+  /patient/{id}:
+    get:
+      tags:
+        - Patients
+      summary: Get patient by ID
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Return patient information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientResponse'
+              examples:
+                patientDetail:
+                  value:
+                    id: 1
+                    name: "Nguyen Van A"
+                    flag_deleted: false
+        '404':
+          description: Patient not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                notFound:
+                  value:
+                    error: "Patient not found"
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+
+    put:
+      tags:
+        - Patients
+      summary: Update patient by ID
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientRequest'
+      responses:
+        '200':
+          description: Update patient successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientResponse'
+              examples:
+                patientUpdated:
+                  value:
+                    id: 1
+                    name: "Nguyen Van A Updated"
+                    flag_deleted: false
+        '400':
+          description: Invalid data (missing name)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidData:
+                  value:
+                    error: "Invalid data: 'name' is required"
+        '404':
+          description: Patient not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                notFound:
+                  value:
+                    error: "Patient not found"
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+
+    delete:
+      tags:
+        - Patients
+      summary: Soft delete patient by ID (set flag_deleted=true)
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Soft delete patient successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Patient deleted successfully"
+              examples:
+                patientDeleted:
+                  value:
+                    message: "Patient deleted successfully"
+        '404':
+          description: Patient not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                notFound:
+                  value:
+                    error: "Patient not found"
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+
+  /unit:
+    get:
+      tags:
+        - Units
+      summary: Get list of all units
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Get unit list successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UnitResponse'
+              examples:
+                unitList:
+                  value:
+                    - id: 1
+                      name: "Unit A"
+                      flag_deleted: false
+                    - id: 2
+                      name: "Unit B"
+                      flag_deleted: false
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+
+    post:
+      tags:
+        - Units
+      summary: Create a new unit
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnitRequest'
+      responses:
+        '201':
+          description: Create unit successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnitResponse'
+              examples:
+                unitCreated:
+                  value:
+                    id: 1
+                    name: "Unit A"
+                    flag_deleted: false
+        '400':
+          description: Invalid data (missing name)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidData:
+                  value:
+                    error: "Invalid data: 'name' is required"
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+
+  /unit/{id}:
+    get:
+      tags:
+        - Units
+      summary: Get unit by ID
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Return unit information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnitResponse'
+              examples:
+                unitDetail:
+                  value:
+                    id: 1
+                    name: "Unit A"
+                    flag_deleted: false
+        '404':
+          description: Unit not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                notFound:
+                  value:
+                    error: "Unit not found"
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+
+    put:
+      tags:
+        - Units
+      summary: Update unit by ID
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnitRequest'
+      responses:
+        '200':
+          description: Update unit successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnitResponse'
+              examples:
+                unitUpdated:
+                  value:
+                    id: 1
+                    name: "Unit A Updated"
+                    flag_deleted: false
+        '400':
+          description: Invalid data (missing name)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidData:
+                  value:
+                    error: "Invalid data: 'name' is required"
+        '404':
+          description: Unit not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                notFound:
+                  value:
+                    error: "Unit not found"
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+
+    delete:
+      tags:
+        - Units
+      summary: Soft delete unit by ID (set flag_deleted=true)
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Soft delete unit successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unit deleted successfully"
+              examples:
+                unitDeleted:
+                  value:
+                    message: "Unit deleted successfully"
+        '404':
+          description: Unit not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                notFound:
+                  value:
+                    error: "Unit not found"
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+
+  /kind:
+    get:
+      tags:
+        - Kinds
+      summary: Get list of all kinds of medicine
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Get kind list successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KindResponse'
+        '401':
+          description: Invalid or missing token
+
+    post:
+      tags:
+        - Kinds
+      summary: Create a new kind of medicine
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KindRequest'
+      responses:
+        '201':
+          description: Create kind successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KindResponse'
+        '400':
+          description: Invalid data (missing name)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidData:
+                  value:
+                    error: "Invalid data: 'name' is required"
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+
+  /kind/{id}:
+    get:
+      tags:
+        - Kinds
+      summary: Get kind by ID
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Return kind information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KindResponse'
+              examples:
+                kindDetail:
+                  value:
+                    id: 1
+                    name: "Kind A"
+                    flag_deleted: false
+        '404':
+          description: Kind not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                notFound:
+                  value:
+                    error: "Kind not found"
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+
+    put:
+      tags:
+        - Kinds
+      summary: Update kind by ID
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KindRequest'
+      responses:
+        '200':
+          description: Update kind successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KindResponse'
+              examples:
+                kindUpdated:
+                  value:
+                    id: 1
+                    name: "Kind A Updated"
+                    flag_deleted: false
+        '400':
+          description: Invalid data (missing name)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidData:
+                  value:
+                    error: "Invalid data: 'name' is required"
+        '404':
+          description: Kind not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                notFound:
+                  value:
+                    error: "Kind not found"
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+
+    delete:
+      tags:
+        - Kinds
+      summary: Soft delete kind by ID (set flag_deleted=true)
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Soft delete kind successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Kind deleted successfully"
+              examples:
+                kindDeleted:
+                  value:
+                    message: "Kind deleted successfully"
+        '404':
+          description: Kind not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                notFound:
+                  value:
+                    error: "Kind not found"
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+
+  /supplier:
+    get:
+      tags:
+        - Suppliers
+      summary: Get list of all suppliers
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Get supplier list successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SupplierResponse'
+                examples:
+                  supplierList:
+                    value:
+                      - id: 1
+                        code: "SUP001"
+                        name: "Supplier A"
+                        flag_deleted: false
+                      - id: 2
+                        code: "SUP002"
+                        name: "Supplier B"
+                        flag_deleted: false
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+
+    post:
+      tags:
+        - Suppliers
+      summary: Create a new supplier
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupplierRequest'
+      responses:
+        '201':
+          description: Create supplier successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupplierResponse'
+              examples:
+                supplierCreated:
+                  value:
+                    id: 1
+                    code: "SUP001"
+                    name: "Supplier A"
+                    flag_deleted: false
+        '400':
+          description: Invalid data (missing code or name)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidData:
+                  value:
+                    error: "Invalid data: 'code' and 'name' are required"
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+  /supplier/{id}:
+      get:
+        tags:
+          - Suppliers
+        summary: Get supplier by ID
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Return supplier information
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/SupplierResponse'
+                examples:
+                  supplierDetail:
+                    value:
+                      id: 1
+                      code: "SUP001"
+                      name: "Supplier A"
+                      flag_deleted: false
+          '404':
+            description: Supplier not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  notFound:
+                    value:
+                      error: "Supplier not found"
+          '401':
+            description: Invalid or missing token
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  unauthorized:
+                    value:
+                      error: "Unauthorized"
+
+      put:
+        tags:
+          - Suppliers
+        summary: Update supplier by ID
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupplierRequest'
+        responses:
+          '200':
+            description: Update supplier successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/SupplierResponse'
+                examples:
+                  supplierUpdated:
+                    value:
+                      id: 1
+                      code: "SUP001"
+                      name: "Supplier A Updated"
+                      flag_deleted: false
+          '400':
+            description: Invalid data (missing code or name)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  invalidData:
+                    value:
+                      error: "Invalid data: 'code' and 'name' are required"
+          '404':
+            description: Supplier not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  notFound:
+                    value:
+                      error: "Supplier not found"
+          '401':
+            description: Invalid or missing token
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  unauthorized:
+                    value:
+                      error: "Unauthorized"
+
+      delete:
+        tags:
+          - Suppliers
+        summary: Soft delete supplier by ID (set flag_deleted=true)
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Soft delete supplier successfully
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: "Supplier deleted successfully"
+                examples:
+                  supplierDeleted:
+                    value:
+                      message: "Supplier deleted successfully"
+          '404':
+            description: Supplier not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  notFound:
+                    value:
+                      error: "Supplier not found"
+          '401':
+            description: Invalid or missing token
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  unauthorized:
+                    value:
+                      error: "Unauthorized"
+
+  /invoice:
+    get:
+      tags:
+        - Invoices
+      summary: Get list of all invoices
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Get invoice list successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InvoiceResponse'
+                examples:
+                  invoiceList:
+                    value:
+                      - id: 1
+                        code: "INV001"
+                        patient_id: 1
+                        total_amount: 100000
+                        flag_deleted: false
+                      - id: 2
+                        code: "INV002"
+                        patient_id: 2
+                        total_amount: 200000
+                        flag_deleted: false
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+#    post:
+#      tags:
+#        - Invoices
+#      summary: Create a new invoice
+#      security:
+#        - bearerAuth: [ ]
+#      requestBody:
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/InvoiceRequest'
+#      responses:
+#        '201':
+#          description: C
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/InvoiceResponse'
+#              examples:
+#                invoiceCreated:
+#                  value:
+#                    id: 1
+#                    code: "INV001"
+#                    patient_id: 1
+#                    total_amount: 100000
+#                    flag_deleted: false
+#        '400':
+#          description: Dữ liệu không hợp lệ (thiếu các trường bắt buộc)
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorResponse'
+#              examples:
+#                invalidData:
+#                  value:
+#                    error: "Invalid data: 'code', 'patient_id', and 'total_amount' are required"
+#        '401':
+#          description: Không có token hoặc token không hợp lệ
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorResponse'
+#              examples:
+#                unauthorized:
+#                  value:
+#                    error: "Unauthorized"
+#
+  /invoice/{id}:
+      get:
+        tags:
+          - Invoices
+        summary: Get invoice by ID
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Return invoice information
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/InvoiceResponse'
+                examples:
+                  invoiceDetail:
+                    value:
+                      id: 1
+                      code: "INV001"
+                      patient_id: 1
+                      total_amount: 100000
+                      flag_deleted: false
+          '404':
+            description: Invoice not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  notFound:
+                    value:
+                      error: "Invoice not found"
+          '401':
+            description: Invalid or missing token
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  unauthorized:
+                    value:
+                      error: "Unauthorized"
+      put:
+        tags:
+            - Invoices
+        summary: Update invoice by ID
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceRequest'
+        responses:
+          '200':
+            description: Update invoice successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/InvoiceResponse'
+                examples:
+                  invoiceUpdated:
+                    value:
+                      id: 1
+                      code: "INV001"
+                      patient_id: 1
+                      total_amount: 100000
+                      flag_deleted: false
+          '400':
+            description: Invalid data (missing code, patient_id, or total_amount)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  invalidData:
+                    value:
+                      error: "Invalid data: 'code', 'patient_id', and 'total_amount' are required"
+          '404':
+            description: Invoice not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  notFound:
+                    value:
+                      error: "Invoice not found"
+          '401':
+            description: Invalid or missing token
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  unauthorized:
+                    value:
+                      error: "Unauthorized"
+      delete:
+        tags:
+          - Invoices
+        summary: Soft delete invoice by ID (set flag_deleted=true)
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Soft delete invoice successfully
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: "Invoice deleted successfully"
+                examples:
+                  invoiceDeleted:
+                    value:
+                      message: "Invoice deleted successfully"
+          '404':
+            description: Invoice not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  notFound:
+                    value:
+                      error: "Invoice not found"
+          '401':
+            description: Invalid or missing token
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  unauthorized:
+                    value:
+                      error: "Unauthorized"
+
+
+  /medicine:
+    get:
+      tags:
+        - Medicines
+      summary: Get list of all medicines
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Return list of medicines
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MedicineResponse'
+              examples:
+                medicineList:
+                  value:
+                    - id: 1
+                      name: "Medicine A"
+                      unit_id: 1
+                      kind_id: 1
+                      supplier_id: 1
+                      price: 10000
+                      flag_deleted: false
+                    - id: 2
+                      name: "Medicine B"
+                      unit_id: 2
+                      kind_id: 2
+                      supplier_id: 2
+                      price: 20000
+                      flag_deleted: false
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+    post:
+      tags:
+        - Medicines
+      summary: Create a new medicine
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MedicineRequest'
+      responses:
+        '201':
+          description: Create medicine successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicineResponse'
+              examples:
+                medicineCreated:
+                  value:
+                    id: 1
+                    name: "Medicine A"
+                    unit_id: 1
+                    kind_id: 1
+                    supplier_id: 1
+                    price: 10000
+                    flag_deleted: false
+        '400':
+          description: Invalid data (missing required fields)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidData:
+                  value:
+                    error: "Invalid data: 'name', 'unit_id', 'kind_id', 'supplier_id', and 'price' are required"
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+  /medicine/{id}:
+      get:
+        tags:
+          - Medicines
+        summary: Get medicine by ID
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Return medicine information
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/MedicineResponse'
+                examples:
+                    medicineDetail:
+                        value:
+                        id: 1
+                        name: "Medicine A"
+                        unit_id: 1
+                        kind_id: 1
+                        supplier_id: 1
+                        price: 10000
+                        flag_deleted: false
+          '404':
+            description: Medicine not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  notFound:
+                    value:
+                      error: "Medicine not found"
+          '401':
+            description: Invalid or missing token
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  unauthorized:
+                    value:
+                      error: "Unauthorized"
+      put:
+        tags:
+          - Medicines
+        summary: Update medicine by ID
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicineRequest'
+        responses:
+          '200':
+            description: Update medicine successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/MedicineResponse'
+                examples:
+                  medicineUpdated:
+                    value:
+                      id: 1
+                      name: "Medicine A Updated"
+                      unit_id: 1
+                      kind_id: 1
+                      supplier_id: 1
+                      price: 10000
+                      flag_deleted: false
+          '400':
+            description: Invalid data (missing required fields)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  invalidData:
+                    value:
+                      error: "Invalid data: 'name', 'unit_id', 'kind_id', 'supplier_id', and 'price' are required"
+          '404':
+            description: Medicine not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  notFound:
+                    value:
+                      error: "Medicine not found"
+          '401':
+            description: Invalid or missing token
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  unauthorized:
+                    value:
+                      error: "Unauthorized"
+      delete:
+        tags:
+          - Medicines
+        summary: Soft delete medicine by ID (set flag_deleted=true)
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: soft delete medicine successfully
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: "Medicine deleted successfully"
+                examples:
+                  medicineDeleted:
+                    value:
+                      message: "Medicine deleted successfully"
+          '404':
+            description: Medicine not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  notFound:
+                    value:
+                      error: "Medicine not found"
+          '401':
+            description: Invalid or missing token
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  unauthorized:
+                    value:
+                      error: "Unauthorized"
+
+
+  /order:
+    get:
+      tags:
+        - Orders
+      summary: Get list of all orders
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Get order list successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderResponse'
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+    post:
+      tags:
+        - Orders
+      summary: Create a new order
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderRequest'
+      responses:
+        '201':
+          description: Create order successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+              examples:
+                orderCreated:
+                  value:
+                    id: 1
+                    code: "ORD001"
+                    date_time: "2023-10-01T10:00:00Z"
+                    total_amount: 500000
+                    flag_deleted: false
+        '400':
+          description: Invalid data (missing code or date_time)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidData:
+                  value:
+                    error: "Invalid data: 'code' and 'date_time' are required"
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+  /order/{id}:
+      get:
+        tags:
+          - Orders
+        summary: Get order by ID
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Return order information
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/OrderResponse'
+                examples:
+                  orderDetail:
+                    value:
+                      id: 1
+                      code: "ORD001"
+                      date_time: "2023-10-01T10:00:00Z"
+                      total_amount: 500000
+                      flag_deleted: false
+          '404':
+            description: Order not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  notFound:
+                    value:
+                      error: "Order not found"
+          '401':
+            description: Invalid or missing token
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  unauthorized:
+                    value:
+                      error: "Unauthorized"
+      put:
+        tags:
+          - Orders
+        summary: Update order by ID
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderRequest'
+        responses:
+          '200':
+            description: Update order successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/OrderResponse'
+                examples:
+                  orderUpdated:
+                    value:
+                      id: 1
+                      code: "ORD001"
+                      date_time: "2023-10-01T10:00:00Z"
+                      total_amount: 500000
+                      flag_deleted: false
+          '400':
+            description: Invalid data (missing code or date_time)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  invalidData:
+                    value:
+                      error: "Invalid data: 'code' and 'date_time' are required"
+          '404':
+            description: Order not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  notFound:
+                    value:
+                      error: "Order not found"
+          '401':
+            description: Invalid or missing token
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  unauthorized:
+                    value:
+                      error: "Unauthorized"
+      delete:
+        tags:
+          - Orders
+        summary: Soft delete order by ID (set flag_deleted=true)
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Soft delete order successfully
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: "Order deleted successfully"
+                examples:
+                  orderDeleted:
+                    value:
+                      message: "Order deleted successfully"
+          '404':
+            description: Order not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  notFound:
+                    value:
+                      error: "Order not found"
+          '401':
+            description: Invalid or missing token
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  unauthorized:
+                    value:
+                      error: "Unauthorized"
+  /cart_details:
+    get:
+      tags:
+        - CartDetails
+      summary: Get list of all cart_details
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Get cart_details list successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CartDetailsResponse'
+              examples:
+                cartDetailsList:
+                  value:
+                    - id: 1
+                      medicine_id: 1
+                      app_user_id: 1
+                      quantity: 2
+
+                    - id: 2
+                      medicine_id: 2
+                      app_user_id: 1
+                      quantity: 3
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  summary: Invalid or missing token
+                  value:
+                    error: "Unauthorized"
+
+
+    post:
+      tags:
+        - CartDetails
+      summary: Add a product to the cart
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartDetailsRequest'
+      responses:
+        '201':
+          description: Add product to cart successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartDetailsResponse'
+              examples:
+                cartDetailsCreated:
+                  value:
+                      id: 2
+                      medicine_id: 2
+                      app_user_id: 1
+                      quantity: 3
+
+        '400':
+          description: Invalid data (missing medicine_id or quantity)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidData:
+                  summary: Invalid data (missing medicine_id or quantity)
+                  value:
+                    error: "Invalid data"
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  summary: Invalid or missing token
+                  value:
+                    error: "Unauthorized"
+
+  /cart_details/{id}:
+    get:
+      tags:
+        - CartDetails
+      summary: Lấy thông tin chi tiết giỏ hàng theo ID
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lấy thông tin giỏ hàng thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartDetailsResponse'
+              examples:
+                cartDetailsDetail:
+                  value:
+                    id: 1
+                    medicine_id: 1
+                    app_user_id: 1
+                    quantity: 2
+        '404':
+          description: Không tìm thấy giỏ hàng với ID đã cung cấp
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                notFound:
+                  summary: ID không tồn tại
+                  value:
+                    error: "Cart detail not found"
+
+        '401':
+          description: Không có token hoặc token không hợp lệ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  summary: Token thiếu hoặc sai
+                  value:
+                    error: "Unauthorized"
+    put:
+        tags:
+          - CartDetails
+        summary: Update product quantity in the cart
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartDetailsRequest'
+        responses:
+          '200':
+            description: Update product quantity successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/CartDetailsResponse'
+                examples:
+                  cartDetailsUpdated:
+                    value:
+                      id: 2
+                      medicine_id: 2
+                      app_user_id: 1
+                      quantity: 3
+          '400':
+            description: Invalid data
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  invalidData:
+                    summary:  Invalid data
+                    value:
+                      error: "Invalid data"
+          '404':
+            description: Cart detail not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  notFound:
+                    summary: Cart detail not found
+                    value:
+                      error: "Cart detail not found"
+          '401':
+            description: Invalid or missing token
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  unauthorized:
+                    summary: Invalid or missing token
+                    value:
+                      error: "Unauthorized"
+
+    delete:
+        tags:
+          - CartDetails
+        summary: Delete product from the cart
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Delete product from cart successfully
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: "Cart detail deleted successfully"
+                examples:
+                  cartDetailsDeleted:
+                    value:
+                      message: "Cart detail deleted successfully"
+          '404':
+            description: Cart detail not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  notFound:
+                    summary: Cart detail not found
+                    value:
+                      error: "Cart detail not found"
+          '401':
+            description: Invalid or missing token
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                examples:
+                  unauthorized:
+                    summary: Invalid or missing token
+                    value:
+                      error: "Unauthorized"
