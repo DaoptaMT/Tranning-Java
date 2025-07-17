@@ -4,8 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.Where;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -16,7 +20,7 @@ import java.util.UUID;
 @Where(clause = "flag_deleted = false")
 @Table(name = "app_user")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserEntity extends BaseEntity{
+public class UserEntity extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -35,4 +39,45 @@ public class UserEntity extends BaseEntity{
 
     @OneToOne(mappedBy = "userEntity")
     CustomerEntity customerEntity;
+
+    @OneToMany(mappedBy = "userEntity")
+    private Set<UserRoleEntity> userRoleEntities = new HashSet<>();
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return userRoleEntities.stream()
+                .map(role -> new SimpleGrantedAuthority(
+                        role.getRoleEntity().getName().toString()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return flagOnline;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return flagOnline;
+    }
 }

@@ -3,7 +3,6 @@ package com.mt.pharmacy_be.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
@@ -11,7 +10,6 @@ import org.hibernate.annotations.Where;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Where(clause = "flag_deleted = false")
 @Table(name = "user_role")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserRoleEntity extends BaseEntity {
