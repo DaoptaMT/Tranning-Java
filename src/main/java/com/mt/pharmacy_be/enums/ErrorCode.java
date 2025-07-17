@@ -26,16 +26,20 @@ public enum ErrorCode {
     // Auth and User 1***
     EMAIL_INVALID(1000, "Email invalid", HttpStatus.BAD_REQUEST),
     PASSWORD_INVALID(1001, "Password must be not blank", HttpStatus.BAD_REQUEST),
-    PLATFORM_INVALID(1002, "Platform must be not null", HttpStatus.BAD_REQUEST),
     FULL_NAME_INVALID(1003, "Full name must be not null", HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND(1004, "User not found", HttpStatus.BAD_REQUEST),
     EMAIL_EXISTS(1004, "Email exists", HttpStatus.BAD_REQUEST),
-    ROLE_INVALID_TYPE(1005, "Email exists", HttpStatus.BAD_REQUEST),
-    INVALID_OLD_PASSWORD(1006, "Mật khẩu hiện tại không chính xác", HttpStatus.BAD_REQUEST),
-    OLD_PASSWORD_INVALID(1007, "old password invalid", HttpStatus.BAD_REQUEST),
+    USERNAME_EXISTS(1004, "Username exists", HttpStatus.BAD_REQUEST),
     NEW_PASSWORD_INVALID(1008, "new password invalid", HttpStatus.BAD_REQUEST),
     USERNAME_INVALID(1009, "Username invalid", HttpStatus.BAD_REQUEST),
     TOKEN_NOT_BLANK(1010, "Token must be not blank", HttpStatus.BAD_REQUEST),
+    PASSWORD_NOT_FORMAT(1011, "Password must contain at least 8 characters, including uppercase, " +
+            "lowercase, number, and special character", HttpStatus.BAD_REQUEST),
+
+    // Role 2***
+    ROLE_INVALID(2000, "Role must be not blank", HttpStatus.BAD_REQUEST),
+    ROLE_NOT_FOUND(2001, "Role not found", HttpStatus.BAD_REQUEST),
+    ROLE_INVALID_TYPE(2002, "Role invalid type", HttpStatus.BAD_REQUEST),
     ;
 
     Integer code;

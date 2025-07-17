@@ -17,4 +17,12 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
      * Description: This method retrieves a UserEntity by its username.
      */
     Optional<UserEntity> findByUsername(String username);
+
+    /**
+     * Check if username exists
+     * Author: Thanh Truc
+     * Date: 16/07/2025
+     * Description: This method checks if a UserEntity with the given username exists.
+     */
+    Boolean existsByUsername(String username);
 }
