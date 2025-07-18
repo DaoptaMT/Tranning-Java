@@ -60,10 +60,10 @@ public class UserServiceImpl implements UserService {
         List<RoleEntity> resolvedRoles = resolveRoles(request.getRoles());
         associateRolesWithUser(savedUser, resolvedRoles);
 
-        if (resolvedRoles.stream().allMatch(role -> role.getName() == RoleType.CUSTOMER)) {
-            saveCustomerEntity(savedUser, request);
+        if (resolvedRoles.stream().allMatch(role -> role.getName().equals(RoleType.CUSTOMER))) {
+            saveCustomerEntity(savedUser);
         } else {
-            saveEmployeeEntity(savedUser, request);
+            saveEmployeeEntity(savedUser);
         }
 
         UserResponseDTO userMap = userMapper.toUserResponseDTO(savedUser);
@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
      * Date: 18/07/2025
      * Description: Creates a CustomerEntity with the user and sets it as not deleted.
      */
-    private void saveCustomerEntity(UserEntity user, UserRequestDTO request) {
+    private void saveCustomerEntity(UserEntity user) {
         CustomerEntity customerEntity = CustomerEntity.builder()
                 .userEntity(user)
                 .flagDeleted(false)
@@ -122,7 +122,7 @@ public class UserServiceImpl implements UserService {
      * Date: 18/07/2025
      * Description: Creates a EmployeeEntity with the user and sets it as not deleted.
      */
-    private void saveEmployeeEntity(UserEntity user, UserRequestDTO request) {
+    private void saveEmployeeEntity(UserEntity user) {
         EmployeeEntity employeeEntity = EmployeeEntity.builder()
                 .userEntity(user)
                 .flagDeleted(false)
