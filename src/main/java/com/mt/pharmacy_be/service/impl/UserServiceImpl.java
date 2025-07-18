@@ -2,16 +2,12 @@ package com.mt.pharmacy_be.service.impl;
 
 import com.mt.pharmacy_be.dto.userDTO.UserRequestDTO;
 import com.mt.pharmacy_be.dto.userDTO.UserResponseDTO;
-import com.mt.pharmacy_be.entity.RoleEntity;
-import com.mt.pharmacy_be.entity.UserEntity;
-import com.mt.pharmacy_be.entity.UserRoleEntity;
+import com.mt.pharmacy_be.entity.*;
 import com.mt.pharmacy_be.enums.ErrorCode;
 import com.mt.pharmacy_be.enums.RoleType;
 import com.mt.pharmacy_be.exception.ApiException;
 import com.mt.pharmacy_be.mapper.UserMapper;
-import com.mt.pharmacy_be.repository.RoleRepository;
-import com.mt.pharmacy_be.repository.UserRepository;
-import com.mt.pharmacy_be.repository.UserRoleRepository;
+import com.mt.pharmacy_be.repository.*;
 import com.mt.pharmacy_be.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
@@ -33,6 +29,8 @@ public class UserServiceImpl implements UserService {
     PasswordEncoder passwordEncoder;
     UserRoleRepository userRoleRepository;
     RoleRepository roleRepository;
+    EmployeeRepository employeeRepository;
+    CustomerRepository customerRepository;
 
     @Override
     public Object getAllUser(int page, int pageSize) {
@@ -61,6 +59,12 @@ public class UserServiceImpl implements UserService {
 
         List<RoleEntity> resolvedRoles = resolveRoles(request.getRoles());
         associateRolesWithUser(savedUser, resolvedRoles);
+
+        if (resolvedRoles.stream().allMatch(role -> role.getName() == RoleType.CUSTOMER)) {
+            saveCustomerEntity(savedUser, request);
+        } else {
+            saveEmployeeEntity(savedUser, request);
+        }
 
         UserResponseDTO userMap = userMapper.toUserResponseDTO(savedUser);
         userMap.setRoles(resolvedRoles.stream()
@@ -96,5 +100,33 @@ public class UserServiceImpl implements UserService {
             userHasRole.setRoleEntity(role);
             userRoleRepository.save(userHasRole);
         });
+    }
+
+    /**
+     * Function: Saves a new CustomerEntity linked to the user.
+     * Author: Thanh Truc
+     * Date: 18/07/2025
+     * Description: Creates a CustomerEntity with the user and sets it as not deleted.
+     */
+    private void saveCustomerEntity(UserEntity user, UserRequestDTO request) {
+        CustomerEntity customerEntity = CustomerEntity.builder()
+                .userEntity(user)
+                .flagDeleted(false)
+                .build();
+        customerRepository.save(customerEntity);
+    }
+
+    /**
+     * Function: Saves a new EmployeeEntity linked to the user.
+     * Author: Thanh Truc
+     * Date: 18/07/2025
+     * Description: Creates a EmployeeEntity with the user and sets it as not deleted.
+     */
+    private void saveEmployeeEntity(UserEntity user, UserRequestDTO request) {
+        EmployeeEntity employeeEntity = EmployeeEntity.builder()
+                .userEntity(user)
+                .flagDeleted(false)
+                .build();
+        employeeRepository.save(employeeEntity);
     }
 }
