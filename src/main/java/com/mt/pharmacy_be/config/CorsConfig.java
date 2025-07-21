@@ -14,12 +14,12 @@ public class CorsConfig {
      * Author: Thanh Truc
      * Date: 15/07/2025
      * Description: This configuration allows CORS requests from the frontend application
-     * running on http://localhost:3000.
+     * running on http://localhost:5173.
      */
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOriginPattern("http://localhost:3000");
+        corsConfiguration.addAllowedOriginPattern("http://localhost:5173");
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.setAllowCredentials(true);
