@@ -40,7 +40,8 @@ public class SecurityConfig {
                                 "/api/v1/auth/**",
                                 "/swagger-ui/**",
                                 "v3/api-docs/**",
-                                "/openapi.yml"
+                                "/openapi.yml",
+                                "/api/v1/medicines"
                         ).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session
