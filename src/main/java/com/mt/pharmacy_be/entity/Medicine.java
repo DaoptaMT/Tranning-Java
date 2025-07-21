@@ -25,7 +25,7 @@ public class Medicine {
     private Float retailProfit;
     @ManyToOne()
     @JoinColumn(name = "kind_of_medicine_id")
-    private Kind_Of_Medicine kindOfMedicine;
+    private KindOfMedicine kindOfMedicine;
     private boolean flagDeleted;
     private String activeElement;
 

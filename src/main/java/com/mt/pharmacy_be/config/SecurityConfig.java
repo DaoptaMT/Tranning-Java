@@ -43,6 +43,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "v3/api-docs/**",
                                 "/openapi.yml",
+                                "/api/v1/kindofmedicine/**",
                                 "/api/v1/medicines/export/progress",
                                 "/api/v1/medicines/search",
                                 "/api/v1/medicines/{id}"

@@ -3,12 +3,14 @@ package com.mt.pharmacy_be.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 @Getter
 @Setter
 @Entity
+@Where(clause = "flag_deleted = false")
 @Table(name = "kind_of_medicine")
-public class Kind_Of_Medicine {
+public class KindOfMedicine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
