@@ -1,16 +1,12 @@
 package com.mt.pharmacy_be.controller;
 
 import com.mt.pharmacy_be.service.MedicineService;
-import com.mt.pharmacy_be.service.UserService;
 import com.mt.pharmacy_be.util.JsonResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,5 +26,16 @@ public class MedicineController {
     public ResponseEntity<?> getAll(@RequestParam(required = false, defaultValue = "1") int page,
                                         @RequestParam(required = false, defaultValue = "10") int pageSize) {
         return JsonResponse.ok(medicineService.getAll(page, pageSize));
+    }
+
+    /**
+     * Handles requests to retrieve a medicine by its ID.
+     * Author: Thanh Truc
+     * Date: 21/07/2025
+     * Description: This endpoint retrieves a specific medicine by its ID.
+     */
+    @GetMapping("{id}")
+    public ResponseEntity<?> getById(@PathVariable Long id) {
+        return JsonResponse.ok(medicineService.getById(id));
     }
 }

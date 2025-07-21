@@ -40,6 +40,9 @@ public enum ErrorCode {
     ROLE_INVALID(2000, "Role must be not blank", HttpStatus.BAD_REQUEST),
     ROLE_NOT_FOUND(2001, "Role not found", HttpStatus.BAD_REQUEST),
     ROLE_INVALID_TYPE(2002, "Role invalid type", HttpStatus.BAD_REQUEST),
+
+    // Medicine 3***
+    MEDICINE_NOT_FOUND(3000, "Medicine not found", HttpStatus.BAD_REQUEST),
     ;
 
     Integer code;
