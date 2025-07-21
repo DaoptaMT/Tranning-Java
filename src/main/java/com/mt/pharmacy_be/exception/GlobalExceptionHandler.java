@@ -43,7 +43,10 @@ public class GlobalExceptionHandler {
         String errorName = ErrorCode
                 .valueOf(exception.getBindingResult().getFieldErrors().getFirst().getDefaultMessage())
                 .getMessage();
-        error.setCode(ErrorCode.INVALID_DATA.getCode());
+        Integer errorCode = ErrorCode
+                .valueOf(exception.getBindingResult().getFieldErrors().getFirst().getDefaultMessage())
+                .getCode();
+        error.setCode(errorCode);
         error.setMessage(errorName);
         exception.getBindingResult().getFieldErrors().forEach(fieldError ->
                 error.additionalProperty(fieldError.getField(), errorName)

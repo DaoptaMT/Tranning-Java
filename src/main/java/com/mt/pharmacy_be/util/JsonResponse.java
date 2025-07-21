@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 
 public class JsonResponse {
     public static <T> ResponseEntity<ApiResponse<T>> ok(T data) {
+        ApiResponse result =  ApiResponse.<T>builder().data(data).build();
+        System.out.println("JsonResponse: " + result);
         return ResponseEntity.ok(ApiResponse.<T>builder().data(data).build());
     }
 

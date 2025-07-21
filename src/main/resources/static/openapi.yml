@@ -5,7 +5,7 @@ info:
   description: API quản lý Role, mọi request đều yêu cầu JWT Token.
 
 servers:
-  - url: http://localhost:8080/api/v1
+  - url: http://localhost:8000/api/v1
 
 components:
   securitySchemes:
@@ -185,10 +185,28 @@ components:
         flag_deleted:
           type: boolean
           description: Soft delete flag
+    PageResponse:
+      type: object
+      properties:
+        page:
+          type: integer
+          default: 1
+          description: Page number (default is 1)
+        pageSize:
+          type: integer
+          default: 10
+          description: Number of items per page (default is 10)
+        totalPages:
+          type: integer
+          description: Total number of pages (optional, used for pagination)
+        items:
+          type: array
+          $ref: '#/components/schemas/KindResponse'
     KindRequest:
       type: object
       required:
         - name
+        - code
       properties:
         name:
           type: string
@@ -204,8 +222,6 @@ components:
     KindResponse:
       type: object
       properties:
-        id:
-          type: integer
         name:
           type: string
         flag_deleted:
@@ -1521,13 +1537,28 @@ paths:
                   value:
                     error: "Unauthorized"
 
-  /kind:
+  /kindofmedicine:
     get:
       tags:
         - Kinds
       summary: Get list of all kinds of medicine
       security:
         - bearerAuth: [ ]
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+          description: Page number (zero-based)
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+          description: Number of items per page
       responses:
         '200':
           description: Get kind list successfully
@@ -1536,7 +1567,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/KindResponse'
+                  $ref: '#/components/schemas/PageResponse'
         '401':
           description: Invalid or missing token
 
@@ -1579,20 +1610,82 @@ paths:
                 unauthorized:
                   value:
                     error: "Unauthorized"
-
-  /kind/{id}:
+  /kindofmedicine/search:
     get:
       tags:
         - Kinds
-      summary: Get kind by ID
+      summary: Search kinds of medicine by name
       security:
         - bearerAuth: [ ]
       parameters:
-        - name: id
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Name of the kind to search for
+      responses:
+        '200':
+          description: Search kinds successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KindResponse'
+              examples:
+                kindSearchResult:
+                  value:
+                    - code: 1
+                      name: "Kind A"
+                      flag_deleted: false
+                    - code: 2
+                      name: "Kind B"
+                      flag_deleted: false
+        '400':
+          description: Invalid search query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidQuery:
+                  value:
+                    error: "Invalid search query"
+        '401':
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized"
+        '404':
+          description: Kind not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                notFound:
+                  value:
+                    error: "Kind not found"
+
+  /kindofmedicine/{code}:
+    get:
+      tags:
+        - Kinds
+      summary: Get kind by code
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: code
           in: path
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         '200':
           description: Return kind information
@@ -1603,7 +1696,7 @@ paths:
               examples:
                 kindDetail:
                   value:
-                    id: 1
+                    code: 1
                     name: "Kind A"
                     flag_deleted: false
         '404':
@@ -1616,6 +1709,7 @@ paths:
                 notFound:
                   value:
                     error: "Kind not found"
+
         '401':
           description: Invalid or missing token
           content:
@@ -1630,15 +1724,15 @@ paths:
     put:
       tags:
         - Kinds
-      summary: Update kind by ID
+      summary: Update kind by code
       security:
         - bearerAuth: [ ]
       parameters:
-        - name: id
+        - name: code
           in: path
           required: true
           schema:
-            type: integer
+            type: string
       requestBody:
         required: true
         content:
@@ -1655,7 +1749,7 @@ paths:
               examples:
                 kindUpdated:
                   value:
-                    id: 1
+                    code: 1
                     name: "Kind A Updated"
                     flag_deleted: false
         '400':
@@ -1692,30 +1786,23 @@ paths:
     delete:
       tags:
         - Kinds
-      summary: Soft delete kind by ID (set flag_deleted=true)
+      summary: Soft delete kind by code (set flag_deleted=true)
       security:
         - bearerAuth: [ ]
       parameters:
-        - name: id
+        - name: code
           in: path
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         '200':
           description: Soft delete kind successfully
           content:
-            application/json:
+            text/plain: # ✅ Thay vì application/json
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Kind deleted successfully"
-              examples:
-                kindDeleted:
-                  value:
-                    message: "Kind deleted successfully"
+                type: string
+                example: Kind of medicine deleted successfully
         '404':
           description: Kind not found
           content:
@@ -2019,6 +2106,8 @@ paths:
                 unauthorized:
                   value:
                     error: "Unauthorized"
+
+# todo
 #    post:
 #      tags:
 #        - Invoices
