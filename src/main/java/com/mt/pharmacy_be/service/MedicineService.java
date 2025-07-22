@@ -3,6 +3,7 @@ package com.mt.pharmacy_be.service;
 import com.mt.pharmacy_be.dto.PageResponse;
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineRequestDTO;
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineResponseDTO;
+import com.mt.pharmacy_be.dto.medicineDTO.MedicineSearchRequestDTO;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,4 +44,20 @@ public interface MedicineService {
      * Description: This method updates an existing medicine's details.
      */
     MedicineResponseDTO update(Long id, @Valid MedicineRequestDTO request, List<MultipartFile> files);
+
+    /**
+     * Delete a medicine by ID.
+     * Author: Thanh Truc
+     * Date: 22/07/2025
+     * Description: This method deletes a medicine from the system by its ID.
+     */
+    void delete(Long id);
+
+    /**
+     * Search for medicines based on various criteria.
+     * Author: Thanh Truc
+     * Date: 22/07/2025
+     * Description: This method searches for medicines using the provided search criteria.
+     */
+    PageResponse<?> searchMedicines(MedicineSearchRequestDTO search, int page, int pageSize);
 }

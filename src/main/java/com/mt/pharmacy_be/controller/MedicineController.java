@@ -1,6 +1,7 @@
 package com.mt.pharmacy_be.controller;
 
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineRequestDTO;
+import com.mt.pharmacy_be.dto.medicineDTO.MedicineSearchRequestDTO;
 import com.mt.pharmacy_be.service.MedicineService;
 import com.mt.pharmacy_be.util.JsonResponse;
 import jakarta.validation.Valid;
@@ -68,5 +69,30 @@ public class MedicineController {
                                     @RequestPart("data") @Valid MedicineRequestDTO request,
                                     @RequestPart("files") List<MultipartFile> files) {
         return JsonResponse.ok(medicineService.update(id, request, files));
+    }
+
+    /**
+     * Handles requests to delete a medicine by its ID.
+     * Author: Thanh Truc
+     * Date: 22/07/2025
+     * Description: This endpoint deletes a specific medicine by its ID.
+     */
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        medicineService.delete(id);
+        return JsonResponse.deleted();
+    }
+
+    /**
+     * Handles requests to search for medicines.
+     * Author: Thanh Truc
+     * Date: 22/07/2025
+     * Description: This endpoint allows searching for medicines based on various criteria.
+     */
+    @PostMapping("/search")
+    public ResponseEntity<?> searchMedicines(@RequestBody MedicineSearchRequestDTO search,
+                                             @RequestParam(required = false, defaultValue = "1") int page,
+                                             @RequestParam(required = false, defaultValue = "10") int pageSize) {
+        return JsonResponse.ok(medicineService.searchMedicines(search, page, pageSize));
     }
 }

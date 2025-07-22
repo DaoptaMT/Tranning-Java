@@ -3,6 +3,7 @@ package com.mt.pharmacy_be.service.impl;
 import com.mt.pharmacy_be.dto.PageResponse;
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineRequestDTO;
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineResponseDTO;
+import com.mt.pharmacy_be.dto.medicineDTO.MedicineSearchRequestDTO;
 import com.mt.pharmacy_be.dto.unitDetailDTO.UnitDetailResponseDTO;
 import com.mt.pharmacy_be.entity.Image_Medicine;
 import com.mt.pharmacy_be.entity.Kind_Of_Medicine;
@@ -12,6 +13,8 @@ import com.mt.pharmacy_be.enums.ErrorCode;
 import com.mt.pharmacy_be.exception.ApiException;
 import com.mt.pharmacy_be.mapper.MedicineMapper;
 import com.mt.pharmacy_be.repository.*;
+import com.mt.pharmacy_be.repository.specification.MedicineSpecification;
+import com.mt.pharmacy_be.repository.specification.SpecificationBuilder;
 import com.mt.pharmacy_be.service.MedicineService;
 import com.mt.pharmacy_be.service.cloudinary.CloudinaryService;
 import jakarta.transaction.Transactional;
@@ -21,6 +24,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -136,6 +140,79 @@ public class MedicineServiceImpl implements MedicineService {
 
         return getMedicineResponseDTO(medicineMap);
     }
+
+    /**
+     * Deletes a medicine by its ID.
+     * Author: Thanh Truc
+     * Date: 22/07/2025
+     * Description: This method marks a medicine as deleted by setting its flagDeleted field to true.
+     */
+    @Override
+    public void delete(Long id) {
+        Medicine medicine = medicineRepository.findById(id)
+                .orElseThrow(() -> new ApiException(ErrorCode.MEDICINE_NOT_FOUND));
+        medicine.setFlagDeleted(true);
+        medicineRepository.save(medicine);
+    }
+
+    /**
+     * Searches for medicines based on various criteria.
+     * Author: Thanh Truc
+     * Date: 22/07/2025
+     * Description: This method allows searching for medicines using the provided search criteria.
+     */
+    @Override
+    public PageResponse<?> searchMedicines(MedicineSearchRequestDTO request, int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, pageSize);
+
+        SpecificationBuilder<Medicine> builder = new SpecificationBuilder<>();
+
+        builder.and(MedicineSpecification.hasCode(request.getCode()))
+                .and(MedicineSpecification.hasName(request.getName()))
+                .and(MedicineSpecification.minPrice(parseDouble(request.getMinPrice())))
+                .and(MedicineSpecification.maxPrice(parseDouble(request.getMaxPrice())))
+                .and(MedicineSpecification.minQuantity(parseLong(request.getMinQuantity())))
+                .and(MedicineSpecification.maxQuantity(parseLong(request.getMaxQuantity())))
+                .and(MedicineSpecification.hasMaker(request.getMaker()))
+                .and(MedicineSpecification.hasOrigin(request.getOrigin()))
+                .and(MedicineSpecification.hasActiveElement(request.getActiveElement()))
+                .and(MedicineSpecification.hasKindOfMedicine(parseLong(request.getKindOfMedicineId())))
+                .and(MedicineSpecification.sortPrice(request.getSortPrice()));
+
+        Page<Medicine> medicinePage = medicineRepository.findAll(builder.build(), pageable);
+
+        List<MedicineResponseDTO> medicineResponseDTOList = medicinePage
+                .map(this::getMedicineResponseDTO)
+                .toList();
+
+        return PageResponse.builder()
+                .page(page)
+                .pageSize(pageSize)
+                .totalPages(medicinePage.getTotalPages())
+                .items(medicineResponseDTOList)
+                .build();
+    }
+
+    /**
+     * Parses a string to a Double, returning null if the string is null or blank.
+     * Author: Thanh Truc
+     * Date: 22/07/2025
+     * Description: This method converts a string representation of a number to a Double.
+     */
+    private Double parseDouble(String value) {
+        return (value == null || value.isBlank()) ? null : Double.valueOf(value);
+    }
+
+    /**
+     * Parses a string to a Long, returning null if the string is null or blank.
+     * Author: Thanh Truc
+     * Date: 22/07/2025
+     * Description: This method converts a string representation of a number to a Long.
+     */
+    private Long parseLong(String value) {
+        return (value == null || value.isBlank()) ? null : Long.valueOf(value);
+    }
+
 
     /**
      * Saves the unit details for a medicine based on the request data.
