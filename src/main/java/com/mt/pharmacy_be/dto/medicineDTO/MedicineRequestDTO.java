@@ -1,7 +1,12 @@
 package com.mt.pharmacy_be.dto.medicineDTO;
 
+import com.mt.pharmacy_be.dto.unitDetailDTO.UnitDetailRequestDTO;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
@@ -13,21 +18,42 @@ import java.util.List;
  */
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class MedicineRequestDTO {
-    String code;
+    @NotBlank(message = "NAME_NOT_BLANK")
     String name;
-    Double price;
-    Integer quantity;
-    Float vat;
-    String note;
-    String maker;
-    String origin;
-    Float retailProfit;
-    String activeElement;
-    List<String> images;
-    Long kindOfMedicineId;
-    Long conversionUnit;
-    String unitName;
-    Long UnitId;
 
+    @NotNull(message = "PRICE_NOT_NULL")
+    @DecimalMin(value = "0.0", inclusive = false, message = "PRICE_GREATER_THAN_0")
+    Double price;
+
+    @NotNull(message = "QUANTITY_NOT_NULL")
+    @Min(value = 1, message = "QUANTITY_MIN_1")
+    Long quantity;
+
+    @NotNull(message = "VAT_NOT_NULL")
+    @DecimalMin(value = "0.0", message = "VAT_MIN_0")
+    Float vat;
+
+    @NotBlank(message = "NOTE_NOT_BLANK")
+    String note;
+
+    @NotBlank(message = "MAKER_NOT_BLANK")
+    String maker;
+
+    @NotBlank(message = "ORIGIN_NOT_BLANK")
+    String origin;
+
+    @NotNull(message = "RETAIL_PROFITS_NOT_NULL")
+    Float retailProfit;
+
+    @NotBlank(message = "ACTIVE_ELEMENT_NOT_BLANK")
+    String activeElement;
+
+    @NotNull(message = "KIND_OF_MEDICINE_ID_NOT_NULL")
+    Long kindOfMedicineId;
+
+    @NotEmpty(message = "UNIT_DETAILS_NOT_EMPTY")
+    @Valid
+    List<UnitDetailRequestDTO> unitDetails;
 }

@@ -27,6 +27,7 @@ spring:
     multipart:
       max-file-size: 500MB
       max-request-size: 500MB
+      enabled: true
 
 jwt:
   secret-key : ${JWT_SECRET_KEY}
@@ -38,4 +39,9 @@ springdoc:
     path: /swagger-ui.html
   api-docs:
     enabled: true        # Tắt tự động sinh API docs từ annotation nếu muốn
+
+cloudinary:
+  cloud_name: ${CLOUDINARY_NAME}
+  api_key: ${CLOUDINARY_API_KEY}
+  api_secret: ${CLOUDINARY_API_SECRET}
 

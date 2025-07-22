@@ -43,6 +43,38 @@ public enum ErrorCode {
 
     // Medicine 3***
     MEDICINE_NOT_FOUND(3000, "Medicine not found", HttpStatus.BAD_REQUEST),
+    CODE_NOT_BLANK(3001, "Code must be not blank", HttpStatus.BAD_REQUEST),
+    NAME_NOT_BLANK(3002, "Name must be not blank", HttpStatus.BAD_REQUEST),
+    PRICE_NOT_NULL(3003, "Price must be not null", HttpStatus.BAD_REQUEST),
+    PRICE_GREATER_THAN_0(3004, "Price must be greater than 0", HttpStatus.BAD_REQUEST),
+    QUANTITY_NOT_NULL(3005, "Quantity must be not null", HttpStatus.BAD_REQUEST),
+    QUANTITY_MIN_1(3006, "Quantity must be greater than or equal to 1", HttpStatus.BAD_REQUEST),
+    VAT_NOT_NULL(3007, "VAT must be not null", HttpStatus.BAD_REQUEST),
+    VAT_MIN_0(3008, "VAT must be greater than or equal to 0", HttpStatus.BAD_REQUEST),
+    NOTE_NOT_BLANK(3009, "Note must be not blank", HttpStatus.BAD_REQUEST),
+    MAKER_NOT_BLANK(3010, "Maker must be not blank", HttpStatus.BAD_REQUEST),
+    ORIGIN_NOT_BLANK(3011, "Origin must be not blank", HttpStatus.BAD_REQUEST),
+    RETAIL_PROFITS_NOT_NULL(3012, "Retail profits must be not null", HttpStatus.BAD_REQUEST),
+    ACTIVE_ELEMENT_NOT_BLANK(3013, "Active element must be not blank", HttpStatus.BAD_REQUEST),
+    IMAGES_NOT_EMPTY(3014, "Images must be not empty", HttpStatus.BAD_REQUEST),
+    KIND_OF_MEDICINE_ID_NOT_NULL(3015, "Kind of medicine ID must be not null", HttpStatus.BAD_REQUEST),
+    UNIT_DETAILS_NOT_EMPTY(3016, "Unit details must be not empty", HttpStatus.BAD_REQUEST),
+    FAILED_TO_UPLOAD_IMAGE(3017, "Failed to upload image", HttpStatus.INTERNAL_SERVER_ERROR),
+
+    // Unit Detail 4***
+    UNIT_DETAIL_NOT_FOUND(4000, "Unit detail not found", HttpStatus.BAD_REQUEST),
+    CONVERSION_UNIT_MIN_1(4001, "Conversion unit must be greater than or equal to 1", HttpStatus.BAD_REQUEST),
+    CONVERSION_UNIT_NOT_NULL(4002, "Conversion unit must be not null", HttpStatus.BAD_REQUEST),
+
+    // Kind of Medicine 5***
+    KIND_OF_MEDICINE_NOT_FOUND(5000, "Kind of medicine not found", HttpStatus.BAD_REQUEST),
+
+    // Unit 6***
+    UNIT_NOT_FOUND(6000, "Unit not found", HttpStatus.BAD_REQUEST),
+    UNIT_ID_NOT_NULL(6001, "Unit ID must be not null", HttpStatus.BAD_REQUEST),
+
+    // Image Medicine 7***
+    IMAGE_NOT_FOUND(7000, "Image not found", HttpStatus.BAD_REQUEST),
     ;
 
     Integer code;

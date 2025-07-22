@@ -4,11 +4,13 @@ import com.mt.pharmacy_be.dto.ApiResponse;
 import com.mt.pharmacy_be.enums.ErrorCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.nio.file.AccessDeniedException;
+import java.util.Objects;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -43,7 +45,10 @@ public class GlobalExceptionHandler {
         String errorName = ErrorCode
                 .valueOf(exception.getBindingResult().getFieldErrors().getFirst().getDefaultMessage())
                 .getMessage();
-        error.setCode(ErrorCode.INVALID_DATA.getCode());
+        Integer errorCode = ErrorCode
+                .valueOf(exception.getBindingResult().getFieldErrors().getFirst().getDefaultMessage())
+                .getCode();
+        error.setCode(errorCode);
         error.setMessage(errorName);
         exception.getBindingResult().getFieldErrors().forEach(fieldError ->
                 error.additionalProperty(fieldError.getField(), errorName)
@@ -66,5 +71,34 @@ public class GlobalExceptionHandler {
                         .message(errorCode.getMessage())
                         .build());
     }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        var error = new ApiResponse<>();
+        ErrorCode errorCode = ErrorCode.INVALID_DATA;
+
+        String message = errorCode.getMessage();
+        error.setCode(errorCode.getCode());
+        error.setMessage(message);
+
+        String fieldName = extractFieldNameFromMessage(ex.getMostSpecificCause().getMessage());
+        error.additionalProperty(Objects.requireNonNullElse(fieldName, "body"), message);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    private String extractFieldNameFromMessage(String message) {
+        if (message == null) return null;
+
+        int start = message.indexOf("(field \"");
+        if (start != -1) {
+            int end = message.indexOf("\")", start);
+            if (end != -1) {
+                return message.substring(start + 8, end);
+            }
+        }
+        return null;
+    }
+
 
 }

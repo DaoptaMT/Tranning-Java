@@ -1,12 +1,18 @@
 package com.mt.pharmacy_be.controller;
 
+import com.mt.pharmacy_be.dto.medicineDTO.MedicineRequestDTO;
 import com.mt.pharmacy_be.service.MedicineService;
 import com.mt.pharmacy_be.util.JsonResponse;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +30,7 @@ public class MedicineController {
      */
     @GetMapping
     public ResponseEntity<?> getAll(@RequestParam(required = false, defaultValue = "1") int page,
-                                        @RequestParam(required = false, defaultValue = "10") int pageSize) {
+                                    @RequestParam(required = false, defaultValue = "10") int pageSize) {
         return JsonResponse.ok(medicineService.getAll(page, pageSize));
     }
 
@@ -38,4 +44,18 @@ public class MedicineController {
     public ResponseEntity<?> getById(@PathVariable Long id) {
         return JsonResponse.ok(medicineService.getById(id));
     }
+
+    /**
+     * Handles requests to create a new medicine.
+     * Author: Thanh Truc
+     * Date: 21/07/2025
+     * Description: This endpoint creates a new medicine in the system.
+     */
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> create(@RequestPart("data") @Valid MedicineRequestDTO request,
+                                    @RequestPart("files") List<MultipartFile> files) {
+        return JsonResponse.ok(medicineService.create(request, files));
+    }
+
+
 }

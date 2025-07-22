@@ -1,8 +1,12 @@
 package com.mt.pharmacy_be.service;
 
 import com.mt.pharmacy_be.dto.PageResponse;
+import com.mt.pharmacy_be.dto.medicineDTO.MedicineRequestDTO;
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineResponseDTO;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 public interface MedicineService {
@@ -22,4 +26,12 @@ public interface MedicineService {
      * Description: This method retrieves a specific medicine by its ID.
      */
     MedicineResponseDTO getById(Long id);
+
+    /**
+     * Create a new medicine.
+     * Author: Thanh Truc
+     * Date: 21/07/2025
+     * Description: This method creates a new medicine in the system.
+     */
+    MedicineResponseDTO create(MedicineRequestDTO request, List<MultipartFile> files);
 }
