@@ -22,6 +22,7 @@ public enum ErrorCode {
     INVALID_DATA(1014, "Invalid data", HttpStatus.BAD_REQUEST),
     REVIEW_NOT_FOUND(1020, "Review not found", HttpStatus.BAD_REQUEST),
     INVALID_TOKEN(1021, "Invalid or expired token", HttpStatus.BAD_REQUEST),
+    VALUE_MUST_BE_NUMERIC(1022, "Value must be numeric", HttpStatus.BAD_REQUEST),
 
     // Auth and User 1***
     EMAIL_INVALID(1000, "Email invalid", HttpStatus.BAD_REQUEST),
@@ -45,7 +46,7 @@ public enum ErrorCode {
     MEDICINE_NOT_FOUND(3000, "Medicine not found", HttpStatus.BAD_REQUEST),
     CODE_NOT_BLANK(3001, "Code must be not blank", HttpStatus.BAD_REQUEST),
     NAME_NOT_BLANK(3002, "Name must be not blank", HttpStatus.BAD_REQUEST),
-    PRICE_NOT_NULL(3003, "Price must be not null", HttpStatus.BAD_REQUEST),
+    PRICE_NOT_BLANK(3003, "Price must be not blank", HttpStatus.BAD_REQUEST),
     PRICE_GREATER_THAN_0(3004, "Price must be greater than 0", HttpStatus.BAD_REQUEST),
     QUANTITY_NOT_NULL(3005, "Quantity must be not null", HttpStatus.BAD_REQUEST),
     QUANTITY_MIN_1(3006, "Quantity must be greater than or equal to 1", HttpStatus.BAD_REQUEST),
@@ -60,6 +61,7 @@ public enum ErrorCode {
     KIND_OF_MEDICINE_ID_NOT_NULL(3015, "Kind of medicine ID must be not null", HttpStatus.BAD_REQUEST),
     UNIT_DETAILS_NOT_EMPTY(3016, "Unit details must be not empty", HttpStatus.BAD_REQUEST),
     FAILED_TO_UPLOAD_IMAGE(3017, "Failed to upload image", HttpStatus.INTERNAL_SERVER_ERROR),
+    NUMERIC_NUMBER(3018, "Not blank, must be numeric, and greater than 0", HttpStatus.BAD_REQUEST),
 
     // Unit Detail 4***
     UNIT_DETAIL_NOT_FOUND(4000, "Unit detail not found", HttpStatus.BAD_REQUEST),

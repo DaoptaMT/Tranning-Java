@@ -1,6 +1,7 @@
 package com.mt.pharmacy_be.dto.medicineDTO;
 
 import com.mt.pharmacy_be.dto.unitDetailDTO.UnitDetailRequestDTO;
+import com.mt.pharmacy_be.validation.Numeric;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AccessLevel;
@@ -23,17 +24,14 @@ public class MedicineRequestDTO {
     @NotBlank(message = "NAME_NOT_BLANK")
     String name;
 
-    @NotNull(message = "PRICE_NOT_NULL")
-    @DecimalMin(value = "0.0", inclusive = false, message = "PRICE_GREATER_THAN_0")
-    Double price;
+    @Numeric(message = "NUMERIC_NUMBER")
+    String price;
 
-    @NotNull(message = "QUANTITY_NOT_NULL")
-    @Min(value = 1, message = "QUANTITY_MIN_1")
-    Long quantity;
+    @Numeric(message = "NUMERIC_NUMBER")
+    String quantity;
 
-    @NotNull(message = "VAT_NOT_NULL")
-    @DecimalMin(value = "0.0", message = "VAT_MIN_0")
-    Float vat;
+    @Numeric(message = "NUMERIC_NUMBER")
+    String vat;
 
     @NotBlank(message = "NOTE_NOT_BLANK")
     String note;
@@ -44,14 +42,14 @@ public class MedicineRequestDTO {
     @NotBlank(message = "ORIGIN_NOT_BLANK")
     String origin;
 
-    @NotNull(message = "RETAIL_PROFITS_NOT_NULL")
-    Float retailProfit;
+    @Numeric(message = "NUMERIC_NUMBER")
+    String retailProfit;
 
     @NotBlank(message = "ACTIVE_ELEMENT_NOT_BLANK")
     String activeElement;
 
-    @NotNull(message = "KIND_OF_MEDICINE_ID_NOT_NULL")
-    Long kindOfMedicineId;
+    @Numeric(message = "NUMERIC_NUMBER")
+    String kindOfMedicineId;
 
     @NotEmpty(message = "UNIT_DETAILS_NOT_EMPTY")
     @Valid

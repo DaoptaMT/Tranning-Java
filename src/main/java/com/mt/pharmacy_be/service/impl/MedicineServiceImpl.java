@@ -84,45 +84,75 @@ public class MedicineServiceImpl implements MedicineService {
     @Override
     @Transactional
     public MedicineResponseDTO create(MedicineRequestDTO request, List<MultipartFile> files) {
-        Kind_Of_Medicine kindOfMedicine = kindOfMedicineRepository.findById(request.getKindOfMedicineId())
+        Kind_Of_Medicine kindOfMedicine = kindOfMedicineRepository.findById(Long.parseLong(request.getKindOfMedicineId()))
                 .orElseThrow(() -> new ApiException(ErrorCode.KIND_OF_MEDICINE_NOT_FOUND));
 
         Medicine medicine = medicineMapper.toMedicineEntity(request);
 
-        List<String> imageUrls = files.stream()
-                .map(file -> {
-                    try {
-                        return cloudinaryService.uploadImage(file);
-                    } catch (IOException e) {
-                        throw new ApiException(ErrorCode.FAILED_TO_UPLOAD_IMAGE);
-                    }
-                })
-                .toList();
+        saveMedicineImages(files, medicine);
 
-        List<Image_Medicine> imageMedicines = imageUrls.stream()
-                .map(url -> Image_Medicine.builder()
-                        .image_path(url)
-                        .medicine(medicine)
-                        .flag_deleted(false)
-                        .build())
-                .collect(Collectors.toList());
-        imageMedicineRepository.saveAll(imageMedicines);
-
-        List<Unit_Detail> unitDetails = request.getUnitDetails().stream()
-                .map(unitDetailDTO -> Unit_Detail.builder()
-                        .conversion_unit(unitDetailDTO.getConversionUnit())
-                        .medicine(medicine)
-                        .unit(unitRepository.findById(unitDetailDTO.getUnitId())
-                                .orElseThrow(() -> new ApiException(ErrorCode.UNIT_NOT_FOUND)))
-                        .build())
-                .collect(Collectors.toList());
-        unitDetailRepository.saveAll(unitDetails);
+        saveListUnitDetail(request, medicine);
 
         medicine.setKindOfMedicine(kindOfMedicine);
         medicine.setCode(String.valueOf(new Random().nextInt(1000000)));
         medicineRepository.save(medicine);
 
         return getMedicineResponseDTO(medicine);
+    }
+
+    /**
+     * Updates an existing medicine's details.
+     * Author: Thanh Truc
+     * Date: 22/07/2025
+     * Description: This method updates the details of an existing medicine
+     */
+    @Override
+    @Transactional
+    public MedicineResponseDTO update(Long id, MedicineRequestDTO request, List<MultipartFile> files) {
+        Medicine medicine = medicineRepository.findById(id)
+                .orElseThrow(() -> new ApiException(ErrorCode.MEDICINE_NOT_FOUND));
+
+        Kind_Of_Medicine kindOfMedicine = kindOfMedicineRepository.findById(Long.parseLong(request.getKindOfMedicineId()))
+                .orElseThrow(() -> new ApiException(ErrorCode.KIND_OF_MEDICINE_NOT_FOUND));
+
+        Medicine medicineMap = medicineMapper.toMedicineEntity(request);
+        medicineMap.setId(id);
+        medicineMap.setCode(medicine.getCode());
+        medicineMap.setKindOfMedicine(kindOfMedicine);
+
+        medicineRepository.save(medicineMap);
+
+        if (request.getUnitDetails() != null && !request.getUnitDetails().isEmpty()) {
+            unitDetailRepository.deleteAll(unitDetailRepository.findByMedicineId(id));
+            saveListUnitDetail(request, medicineMap);
+        }
+
+        if (files != null && !files.isEmpty()) {
+            List<Image_Medicine> oldImages = imageMedicineRepository.findByMedicineId(id)
+                    .orElse(List.of());
+            imageMedicineRepository.deleteAll(oldImages);
+            saveMedicineImages(files, medicineMap);
+        }
+
+        return getMedicineResponseDTO(medicineMap);
+    }
+
+    /**
+     * Saves the unit details for a medicine based on the request data.
+     * Author: Thanh Truc
+     * Date: 22/07/2025
+     * Description: This method processes the unit details from the request,
+     */
+    private void saveListUnitDetail(MedicineRequestDTO request, Medicine medicine) {
+        List<Unit_Detail> unitDetails = request.getUnitDetails().stream()
+                .map(unitDetailDTO -> Unit_Detail.builder()
+                        .conversion_unit(Long.parseLong(unitDetailDTO.getConversionUnit()))
+                        .medicine(medicine)
+                        .unit(unitRepository.findById(Long.parseLong(unitDetailDTO.getUnitId()))
+                                .orElseThrow(() -> new ApiException(ErrorCode.UNIT_NOT_FOUND)))
+                        .build())
+                .collect(Collectors.toList());
+        unitDetailRepository.saveAll(unitDetails);
     }
 
     /**
@@ -154,5 +184,32 @@ public class MedicineServiceImpl implements MedicineService {
         responseDTO.setImages(imagePaths);
 
         return responseDTO;
+    }
+
+    /**
+     * Saves the images associated with a medicine.
+     * Author: Thanh Truc
+     * Date: 22/07/2025
+     * Description: This method uploads images to the cloud and associates them with the medicine entity.
+     */
+    private void saveMedicineImages(List<MultipartFile> files, Medicine medicine) {
+        List<String> imageUrls = files.stream()
+                .map(file -> {
+                    try {
+                        return cloudinaryService.uploadImage(file);
+                    } catch (IOException e) {
+                        throw new ApiException(ErrorCode.FAILED_TO_UPLOAD_IMAGE);
+                    }
+                })
+                .toList();
+
+        List<Image_Medicine> imageMedicines = imageUrls.stream()
+                .map(url -> Image_Medicine.builder()
+                        .image_path(url)
+                        .medicine(medicine)
+                        .flag_deleted(false)
+                        .build())
+                .collect(Collectors.toList());
+        imageMedicineRepository.saveAll(imageMedicines);
     }
 }

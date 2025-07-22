@@ -57,5 +57,16 @@ public class MedicineController {
         return JsonResponse.ok(medicineService.create(request, files));
     }
 
-
+    /**
+     * Handles requests to update an existing medicine.
+     * Author: Thanh Truc
+     * Date: 21/07/2025
+     * Description: This endpoint updates an existing medicine in the system.
+     */
+    @PutMapping(value = "{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> update(@PathVariable Long id,
+                                    @RequestPart("data") @Valid MedicineRequestDTO request,
+                                    @RequestPart("files") List<MultipartFile> files) {
+        return JsonResponse.ok(medicineService.update(id, request, files));
+    }
 }
