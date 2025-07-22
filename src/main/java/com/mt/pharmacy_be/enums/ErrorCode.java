@@ -40,7 +40,15 @@ public enum ErrorCode {
     ROLE_INVALID(2000, "Role must be not blank", HttpStatus.BAD_REQUEST),
     ROLE_NOT_FOUND(2001, "Role not found", HttpStatus.BAD_REQUEST),
     ROLE_INVALID_TYPE(2002, "Role invalid type", HttpStatus.BAD_REQUEST),
+
+    //Kind 3***
+    KIND_NOT_FOUND(3000, "Kind not found", HttpStatus.BAD_REQUEST),
+//    KIND_INVALID(3001, "Kind of medicine not found with id: ", HttpStatus.BAD_REQUEST)
+    CODE_INVALID(3001, "Code invalid ", HttpStatus.BAD_REQUEST),
+    NAME_INVALID(3002, "Name invalid ", HttpStatus.BAD_REQUEST),
+    KIND_EXISTED(3003, "Code exists", HttpStatus.BAD_REQUEST),
     ;
+
 
     Integer code;
     String message;
