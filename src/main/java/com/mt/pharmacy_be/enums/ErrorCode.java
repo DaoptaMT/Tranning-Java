@@ -45,7 +45,8 @@ public enum ErrorCode {
     KIND_NOT_FOUND(3000, "Kind not found", HttpStatus.BAD_REQUEST),
 //    KIND_INVALID(3001, "Kind of medicine not found with id: ", HttpStatus.BAD_REQUEST)
     CODE_INVALID(3001, "Code invalid ", HttpStatus.BAD_REQUEST),
-    NAME_INVALID(3002, "Name invalid ", HttpStatus.BAD_REQUEST)
+    NAME_INVALID(3002, "Name invalid ", HttpStatus.BAD_REQUEST),
+    KIND_EXISTED(3003, "Code exists", HttpStatus.BAD_REQUEST),
     ;
 
 

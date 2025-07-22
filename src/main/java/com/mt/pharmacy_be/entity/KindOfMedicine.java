@@ -10,7 +10,7 @@ import org.hibernate.annotations.Where;
 @Entity
 @Where(clause = "flag_deleted = false")
 @Table(name = "kind_of_medicine")
-public class KindOfMedicine {
+public class KindOfMedicine  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
