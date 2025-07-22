@@ -33,7 +33,7 @@ public class KindOfMedicineService implements KindOfMedicineServiceInterface {
 //        KindOfMedicineResponseDTO kind = getKindOfMedicineByCode(requestDTO.getCode());
         Optional<KindOfMedicine> kind = kindOfMedicineRepository.findByCode(requestDTO.getCode());
 
-        if (kind != null) {
+        if (kind.isPresent()) {
             throw new ApiException(ErrorCode.KIND_EXISTED);
         }
         KindOfMedicine kindOfMedicine = modelMapper.map(requestDTO, KindOfMedicine.class);
