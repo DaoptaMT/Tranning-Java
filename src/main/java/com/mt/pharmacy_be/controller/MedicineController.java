@@ -8,12 +8,9 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +26,7 @@ public class MedicineController {
      * Date: 21/07/2025
      * Description: This endpoint retrieves a paginated list of all medicines.
      */
+    @PreAuthorize("permitAll()")
     @GetMapping
     public ResponseEntity<?> getAll(@RequestParam(required = false, defaultValue = "1") int page,
                                     @RequestParam(required = false, defaultValue = "10") int pageSize) {
@@ -52,10 +50,10 @@ public class MedicineController {
      * Date: 21/07/2025
      * Description: This endpoint creates a new medicine in the system.
      */
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> create(@RequestPart("data") @Valid MedicineRequestDTO request,
-                                    @RequestPart("files") List<MultipartFile> files) {
-        return JsonResponse.ok(medicineService.create(request, files));
+    @PreAuthorize("hasAuthority('EMPLOYEE')")
+    @PostMapping()
+    public ResponseEntity<?> create(@RequestBody @Valid MedicineRequestDTO request) {
+        return JsonResponse.ok(medicineService.create(request));
     }
 
     /**
@@ -64,11 +62,11 @@ public class MedicineController {
      * Date: 21/07/2025
      * Description: This endpoint updates an existing medicine in the system.
      */
-    @PutMapping(value = "{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAuthority('EMPLOYEE')")
+    @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id,
-                                    @RequestPart("data") @Valid MedicineRequestDTO request,
-                                    @RequestPart("files") List<MultipartFile> files) {
-        return JsonResponse.ok(medicineService.update(id, request, files));
+                                    @RequestBody @Valid MedicineRequestDTO request) {
+        return JsonResponse.ok(medicineService.update(id, request));
     }
 
     /**
@@ -77,6 +75,7 @@ public class MedicineController {
      * Date: 22/07/2025
      * Description: This endpoint deletes a specific medicine by its ID.
      */
+    @PreAuthorize("hasAuthority('EMPLOYEE')")
     @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         medicineService.delete(id);
@@ -89,6 +88,7 @@ public class MedicineController {
      * Date: 22/07/2025
      * Description: This endpoint allows searching for medicines based on various criteria.
      */
+    @PreAuthorize("permitAll()")
     @PostMapping("/search")
     public ResponseEntity<?> searchMedicines(@RequestBody MedicineSearchRequestDTO search,
                                              @RequestParam(required = false, defaultValue = "1") int page,

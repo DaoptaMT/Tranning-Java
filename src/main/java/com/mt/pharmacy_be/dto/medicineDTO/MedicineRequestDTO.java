@@ -1,7 +1,6 @@
 package com.mt.pharmacy_be.dto.medicineDTO;
 
 import com.mt.pharmacy_be.dto.unitDetailDTO.UnitDetailRequestDTO;
-import com.mt.pharmacy_be.validation.Numeric;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AccessLevel;
@@ -9,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -24,14 +24,18 @@ public class MedicineRequestDTO {
     @NotBlank(message = "NAME_NOT_BLANK")
     String name;
 
-    @Numeric(message = "NUMERIC_NUMBER")
-    String price;
+    //@JsonDeserialize(using = LocalDateDeserializer.class)
+    @NotNull(message = "PRICE_NOT_NULL")
+    @DecimalMin(value = "0.0", inclusive = false, message = "PRICE_GREATER_THAN_0")
+    BigDecimal price;
 
-    @Numeric(message = "NUMERIC_NUMBER")
-    String quantity;
+    @NotNull(message = "QUANTITY_NOT_NULL")
+    @Min(value = 1, message = "QUANTITY_MIN_1")
+    Integer quantity;
 
-    @Numeric(message = "NUMERIC_NUMBER")
-    String vat;
+    @NotNull(message = "VAT_NOT_NULL")
+    @DecimalMin(value = "0.0", message = "VAT_MIN_INVALID")
+    Float vat;
 
     @NotBlank(message = "NOTE_NOT_BLANK")
     String note;
@@ -42,16 +46,21 @@ public class MedicineRequestDTO {
     @NotBlank(message = "ORIGIN_NOT_BLANK")
     String origin;
 
-    @Numeric(message = "NUMERIC_NUMBER")
-    String retailProfit;
+    @NotNull(message = "RETAIL_PROFIT_NOT_NULL")
+    @DecimalMin(value = "0.0", message = "RETAIL_PROFIT_MIN_INVALID")
+    Float retailProfit;
 
     @NotBlank(message = "ACTIVE_ELEMENT_NOT_BLANK")
     String activeElement;
 
-    @Numeric(message = "NUMERIC_NUMBER")
-    String kindOfMedicineId;
+    @NotNull(message = "KIND_OF_MEDICINE_ID_NOT_NULL")
+    @Positive(message = "KIND_OF_MEDICINE_ID_INVALID")
+    Long kindOfMedicineId;
 
     @NotEmpty(message = "UNIT_DETAILS_NOT_EMPTY")
     @Valid
     List<UnitDetailRequestDTO> unitDetails;
+
+    @NotEmpty(message = "IMAGE_URLS_NOT_EMPTY")
+    List<String> imageUrls;
 }

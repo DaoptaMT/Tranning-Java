@@ -4,6 +4,7 @@ import com.mt.pharmacy_be.enums.TokenType;
 import com.mt.pharmacy_be.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Claims;
@@ -92,6 +93,9 @@ public class JwtServiceImpl implements JwtService {
      * Description: This method constructs a JWT token using the provided claims, user details, expiration time, and token type.
      */
     private String buildToken(Map<String, Object> claims, UserDetails userDetails, long expiration, TokenType tokenType) {
+        claims.put("roles", userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList());
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
@@ -125,7 +129,7 @@ public class JwtServiceImpl implements JwtService {
      * Date: 15/07/2025
      * Description: Returns claims containing the token's payload information.
      */
-    private Claims extractAcclaims(String token, TokenType tokenType) {
+    private Claims extractClaims(String token, TokenType tokenType) {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getKey(tokenType))
@@ -151,7 +155,7 @@ public class JwtServiceImpl implements JwtService {
      * Description: This method retrieves the claims from the JWT token using the specified token type.
      */
     private <T> T extractClaims(String token, Function<Claims, T> claimsResolver, TokenType tokenType) {
-        final Claims claims = extractAcclaims(token, tokenType);
+        final Claims claims = extractClaims(token, tokenType);
         return claimsResolver.apply(claims);
     }
 

@@ -6,9 +6,6 @@ import com.mt.pharmacy_be.dto.medicineDTO.MedicineResponseDTO;
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineSearchRequestDTO;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @Service
 public interface MedicineService {
@@ -35,7 +32,7 @@ public interface MedicineService {
      * Date: 21/07/2025
      * Description: This method creates a new medicine in the system.
      */
-    MedicineResponseDTO create(MedicineRequestDTO request, List<MultipartFile> files);
+    MedicineResponseDTO create(MedicineRequestDTO request);
 
     /**
      * Update an existing medicine.
@@ -43,7 +40,7 @@ public interface MedicineService {
      * Date: 22/07/2025
      * Description: This method updates an existing medicine's details.
      */
-    MedicineResponseDTO update(Long id, @Valid MedicineRequestDTO request, List<MultipartFile> files);
+    MedicineResponseDTO update(Long id, @Valid MedicineRequestDTO request);
 
     /**
      * Delete a medicine by ID.

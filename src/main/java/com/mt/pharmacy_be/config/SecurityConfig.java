@@ -1,5 +1,6 @@
 package com.mt.pharmacy_be.config;
 
+import com.mt.pharmacy_be.enums.RoleType;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -40,9 +41,9 @@ public class SecurityConfig {
                                 "/api/v1/auth/**",
                                 "/swagger-ui/**",
                                 "v3/api-docs/**",
-                                "/openapi.yml",
-                                "/api/v1/medicines/**"
+                                "/openapi.yml"
                         ).permitAll()
+                        .requestMatchers("/api/v1/files/upload").hasAuthority(RoleType.EMPLOYEE.name())
                         .anyRequest().authenticated())
                 .sessionManagement(session
                         -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

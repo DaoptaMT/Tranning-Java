@@ -16,7 +16,6 @@ import com.mt.pharmacy_be.repository.*;
 import com.mt.pharmacy_be.repository.specification.MedicineSpecification;
 import com.mt.pharmacy_be.repository.specification.SpecificationBuilder;
 import com.mt.pharmacy_be.service.MedicineService;
-import com.mt.pharmacy_be.service.cloudinary.CloudinaryService;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +23,8 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -40,7 +36,6 @@ public class MedicineServiceImpl implements MedicineService {
     MedicineRepository medicineRepository;
     MedicineMapper medicineMapper;
     UnitDetailRepository unitDetailRepository;
-    CloudinaryService cloudinaryService;
     ImageMedicineRepository imageMedicineRepository;
     KindOfMedicineRepository kindOfMedicineRepository;
     UnitRepository unitRepository;
@@ -87,13 +82,13 @@ public class MedicineServiceImpl implements MedicineService {
      */
     @Override
     @Transactional
-    public MedicineResponseDTO create(MedicineRequestDTO request, List<MultipartFile> files) {
-        Kind_Of_Medicine kindOfMedicine = kindOfMedicineRepository.findById(Long.parseLong(request.getKindOfMedicineId()))
+    public MedicineResponseDTO create(MedicineRequestDTO request) {
+        Kind_Of_Medicine kindOfMedicine = kindOfMedicineRepository.findById(request.getKindOfMedicineId())
                 .orElseThrow(() -> new ApiException(ErrorCode.KIND_OF_MEDICINE_NOT_FOUND));
 
         Medicine medicine = medicineMapper.toMedicineEntity(request);
 
-        saveMedicineImages(files, medicine);
+        saveMedicineImages(request, medicine);
 
         saveListUnitDetail(request, medicine);
 
@@ -112,11 +107,11 @@ public class MedicineServiceImpl implements MedicineService {
      */
     @Override
     @Transactional
-    public MedicineResponseDTO update(Long id, MedicineRequestDTO request, List<MultipartFile> files) {
+    public MedicineResponseDTO update(Long id, MedicineRequestDTO request) {
         Medicine medicine = medicineRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorCode.MEDICINE_NOT_FOUND));
 
-        Kind_Of_Medicine kindOfMedicine = kindOfMedicineRepository.findById(Long.parseLong(request.getKindOfMedicineId()))
+        Kind_Of_Medicine kindOfMedicine = kindOfMedicineRepository.findById(request.getKindOfMedicineId())
                 .orElseThrow(() -> new ApiException(ErrorCode.KIND_OF_MEDICINE_NOT_FOUND));
 
         Medicine medicineMap = medicineMapper.toMedicineEntity(request);
@@ -131,11 +126,11 @@ public class MedicineServiceImpl implements MedicineService {
             saveListUnitDetail(request, medicineMap);
         }
 
-        if (files != null && !files.isEmpty()) {
+        if (request.getImageUrls() != null && !request.getImageUrls().isEmpty()) {
             List<Image_Medicine> oldImages = imageMedicineRepository.findByMedicineId(id)
                     .orElse(List.of());
             imageMedicineRepository.deleteAll(oldImages);
-            saveMedicineImages(files, medicineMap);
+            saveMedicineImages(request, medicineMap);
         }
 
         return getMedicineResponseDTO(medicineMap);
@@ -204,10 +199,10 @@ public class MedicineServiceImpl implements MedicineService {
     }
 
     /**
-     * Parses a string to a Long, returning null if the string is null or blank.
+     * Parses a string to along, returning null if the string is null or blank.
      * Author: Thanh Truc
      * Date: 22/07/2025
-     * Description: This method converts a string representation of a number to a Long.
+     * Description: This method converts a string representation of a number to along.
      */
     private Long parseLong(String value) {
         return (value == null || value.isBlank()) ? null : Long.valueOf(value);
@@ -223,9 +218,9 @@ public class MedicineServiceImpl implements MedicineService {
     private void saveListUnitDetail(MedicineRequestDTO request, Medicine medicine) {
         List<Unit_Detail> unitDetails = request.getUnitDetails().stream()
                 .map(unitDetailDTO -> Unit_Detail.builder()
-                        .conversion_unit(Long.parseLong(unitDetailDTO.getConversionUnit()))
+                        .conversion_unit(unitDetailDTO.getConversionUnit())
                         .medicine(medicine)
-                        .unit(unitRepository.findById(Long.parseLong(unitDetailDTO.getUnitId()))
+                        .unit(unitRepository.findById(unitDetailDTO.getUnitId())
                                 .orElseThrow(() -> new ApiException(ErrorCode.UNIT_NOT_FOUND)))
                         .build())
                 .collect(Collectors.toList());
@@ -264,23 +259,13 @@ public class MedicineServiceImpl implements MedicineService {
     }
 
     /**
-     * Saves the images associated with a medicine.
+     * Saves the images for a medicine from the provided files.
      * Author: Thanh Truc
      * Date: 22/07/2025
-     * Description: This method uploads images to the cloud and associates them with the medicine entity.
+     * Description: This method uploads images to the cloud and saves their URLs in the database.
      */
-    private void saveMedicineImages(List<MultipartFile> files, Medicine medicine) {
-        List<String> imageUrls = files.stream()
-                .map(file -> {
-                    try {
-                        return cloudinaryService.uploadImage(file);
-                    } catch (IOException e) {
-                        throw new ApiException(ErrorCode.FAILED_TO_UPLOAD_IMAGE);
-                    }
-                })
-                .toList();
-
-        List<Image_Medicine> imageMedicines = imageUrls.stream()
+    private void saveMedicineImages(MedicineRequestDTO requestDTO, Medicine medicine) {
+        List<Image_Medicine> imageMedicines = requestDTO.getImageUrls().stream()
                 .map(url -> Image_Medicine.builder()
                         .image_path(url)
                         .medicine(medicine)

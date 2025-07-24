@@ -40,7 +40,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
     @OneToOne(mappedBy = "userEntity")
     CustomerEntity customerEntity;
 
-    @OneToMany(mappedBy = "userEntity")
+    @OneToMany(mappedBy = "userEntity", fetch = FetchType.EAGER)
     private Set<UserRoleEntity> userRoleEntities = new HashSet<>();
 
     @Override

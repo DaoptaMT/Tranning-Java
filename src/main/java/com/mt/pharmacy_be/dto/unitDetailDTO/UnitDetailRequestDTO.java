@@ -1,8 +1,7 @@
 package com.mt.pharmacy_be.dto.unitDetailDTO;
 
-import com.mt.pharmacy_be.validation.Numeric;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,9 +17,11 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UnitDetailRequestDTO {
-    @Numeric(message = "NUMERIC_NUMBER")
-    String unitId;
+    @NotNull(message = "UNIT_ID_NOT_NULL")
+    @Positive(message = "UNIT_ID_MIN_1")
+    Long unitId;
 
-    @Numeric(message = "NUMERIC_NUMBER")
-    String conversionUnit;
+    @NotNull(message = "CONVERSION_UNIT_NOT_NULL")
+    @Positive(message = "CONVERSION_UNIT_MIN_1")
+    Long conversionUnit;
 }
