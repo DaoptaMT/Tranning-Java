@@ -24,7 +24,6 @@ public class MedicineRequestDTO {
     @NotBlank(message = "NAME_NOT_BLANK")
     String name;
 
-    //@JsonDeserialize(using = LocalDateDeserializer.class)
     @NotNull(message = "PRICE_NOT_NULL")
     @DecimalMin(value = "0.0", inclusive = false, message = "PRICE_GREATER_THAN_0")
     BigDecimal price;

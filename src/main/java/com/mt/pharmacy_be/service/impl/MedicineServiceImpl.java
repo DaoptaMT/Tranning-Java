@@ -24,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Random;
@@ -121,12 +122,12 @@ public class MedicineServiceImpl implements MedicineService {
 
         medicineRepository.save(medicineMap);
 
-        if (request.getUnitDetails() != null && !request.getUnitDetails().isEmpty()) {
+        if (!CollectionUtils.isEmpty(request.getUnitDetails())) {
             unitDetailRepository.deleteAll(unitDetailRepository.findByMedicineId(id));
             saveListUnitDetail(request, medicineMap);
         }
 
-        if (request.getImageUrls() != null && !request.getImageUrls().isEmpty()) {
+        if (!CollectionUtils.isEmpty(request.getImageUrls())) {
             List<Image_Medicine> oldImages = imageMedicineRepository.findByMedicineId(id)
                     .orElse(List.of());
             imageMedicineRepository.deleteAll(oldImages);
