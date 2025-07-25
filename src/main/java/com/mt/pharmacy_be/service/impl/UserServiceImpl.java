@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
      * Function: Saves a new EmployeeEntity linked to the user.
      * Author: Thanh Truc
      * Date: 18/07/2025
-     * Description: Creates a EmployeeEntity with the user and sets it as not deleted.
+     * Description: Creates an EmployeeEntity with the user and sets it as not deleted.
      */
     private void saveEmployeeEntity(UserEntity user) {
         EmployeeEntity employeeEntity = EmployeeEntity.builder()
