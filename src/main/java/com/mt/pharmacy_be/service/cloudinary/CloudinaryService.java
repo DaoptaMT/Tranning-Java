@@ -27,26 +27,6 @@ public class CloudinaryService {
     @Autowired
     private Cloudinary cloudinary;
 
-    //    @Async("taskExecutor")
-//    public CompletableFuture<String> uploadImageAsync(MultipartFile file){
-//        try {
-//            String imageUrl = uploadImage(file);
-//            log.info("Image uploaded successfully: {}", imageUrl);
-//            return CompletableFuture.completedFuture(imageUrl);
-//        }catch (IOException e) {
-//            CompletableFuture<String> failed = new CompletableFuture<>();
-//            failed.completeExceptionally(new ApiException(ErrorCode.FAILED_TO_UPLOAD_IMAGE));
-//            return failed;
-//        }
-//    }
-//
-//    public String uploadImage(MultipartFile file) throws IOException {
-//        Map uploadResult = cloudinary.uploader().upload(
-//                file.getBytes(),
-//                ObjectUtils.asMap("secure", true)
-//        );
-//        return (String) uploadResult.get("url");
-//    }
     @Async("taskExecutor")
     public CompletableFuture<String> uploadImageAsync(MultipartFile file) {
         String fileName = file.getOriginalFilename();

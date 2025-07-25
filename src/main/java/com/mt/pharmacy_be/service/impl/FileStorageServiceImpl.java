@@ -31,18 +31,6 @@ public class FileStorageServiceImpl implements FileStorageService {
         log.info("FileStorageServiceImpl initialized with executor: {}", ioTaskExecutor.getClass().getName());
     }
 
-//    @Override
-//    public List<String> uploadFile(List<MultipartFile> files) {
-//        List<CompletableFuture<String>> futures = files.stream()
-//                .map(cloudinaryService::uploadImageAsync)
-//                .toList();
-//        // lỗi sẽ throw ngay (join)
-//        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-//        return futures.stream()
-//                .map(CompletableFuture::join) // dùng get() để checked exception
-//                .collect(Collectors.toList());
-//    }
-
     @Override
     public List<String> uploadFile(List<MultipartFile> files) {
         if (CollectionUtils.isEmpty(files)) {
