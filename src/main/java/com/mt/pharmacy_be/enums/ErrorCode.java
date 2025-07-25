@@ -25,6 +25,7 @@ public enum ErrorCode {
     VALUE_MUST_BE_NUMERIC(1022, "Value must be numeric", HttpStatus.BAD_REQUEST),
     INVALID_CREDENTIALS(1023, "Incorrect username or password", HttpStatus.UNAUTHORIZED),
     FORBIDDEN(1024, "You do not have permission to access this resource", HttpStatus.FORBIDDEN),
+    FILES_NOT_EMPTY(1025, "File list must not be null or empty", HttpStatus.BAD_REQUEST),
 
     // Auth and User 1***
     EMAIL_INVALID(1000, "Email invalid", HttpStatus.BAD_REQUEST),
