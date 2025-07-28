@@ -6,13 +6,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.util.concurrent.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @Configuration
 @EnableAsync
 @EnableConfigurationProperties(AsyncProperties.class)
 public class AsyncConfig {
 
+    /**
+     * Configures a ThreadPoolTaskExecutor for handling asynchronous tasks.
+     * Author: Thanh Truc
+     * Date: 28/07/2024
+     * Description: This method sets up a ThreadPoolTaskExecutor with properties defined in AsyncProperties.
+     */
     @Bean(name = "taskExecutor")
     public Executor taskExecutor(AsyncProperties props) {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
