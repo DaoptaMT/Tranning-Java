@@ -16,8 +16,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -97,7 +100,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .tokenType(TokenType.BEARER)
                 .id(user.getId())
                 .username(user.getUsername())
-                .roles(user.getAuthorities().toString())
+                .roles(user.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList()))
                 .message(message)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)

@@ -5,6 +5,7 @@ import com.mt.pharmacy_be.entity.Kind_Of_Medicine;
 import com.mt.pharmacy_be.entity.Medicine;
 import com.mt.pharmacy_be.mapper.MedicineMapper;
 import com.mt.pharmacy_be.repository.KindOfMedicineRepository;
+import com.mt.pharmacy_be.repository.MedicineRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
@@ -18,11 +19,11 @@ import java.util.Random;
 
 /**
  * Processor for converting MedicineCsvDTO to Medicine entity.
- * This class validates the input data and maps it to the Medicine entity.
+ * This class validates the input data, checks for duplicates, and maps it to the Medicine entity.
  * Author: Thanh Truc
- * Date: 28/07/2024
+ * Date: 29/07/2025
  * Description: This processor handles the conversion of CSV data to the Medicine entity,
- * including validation of required fields and setting the kind of medicine based on ID.
+ * including validation of required fields, checking for duplicates, and setting the kind of medicine based on ID.
  */
 @Component
 @RequiredArgsConstructor
@@ -30,6 +31,7 @@ import java.util.Random;
 public class MedicineCsvItemProcessor implements ItemProcessor<MedicineCsvDTO, Medicine> {
 
     private final KindOfMedicineRepository kindOfMedicineRepository;
+    private final MedicineRepository medicineRepository;
     private final MedicineMapper medicineMapper;
 
     @Override
@@ -41,6 +43,17 @@ public class MedicineCsvItemProcessor implements ItemProcessor<MedicineCsvDTO, M
         if (!validationErrors.isEmpty()) {
             log.warn("Validation failed for item: {}. Errors: {}", item, String.join("; ", validationErrors));
             return null;
+        }
+
+        if (StringUtils.hasText(item.getName())) {
+            if (StringUtils.hasText(item.getKindOfMedicineId())) {
+                Long kindOfMedicineId = Long.parseLong(item.getKindOfMedicineId());
+                if (medicineRepository.existsByNameIgnoreCaseAndKindOfMedicineId(item.getName(), kindOfMedicineId)) {
+                    log.info("Medicine with name '{}' and kind of medicine ID '{}' already exists. Skipping...",
+                            item.getName(), kindOfMedicineId);
+                    return null;
+                }
+            }
         }
 
         Medicine medicine = medicineMapper.toMedicineEntity(item);

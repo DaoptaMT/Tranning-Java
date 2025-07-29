@@ -7,6 +7,7 @@ import jakarta.persistence.Enumerated;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -20,7 +21,7 @@ public class AuthenticationResponseDTO {
     TokenType tokenType;
     UUID id;
     String username;
-    String roles;
+    List<String> roles;
     String message;
     @JsonProperty("accessToken")
     String accessToken;
