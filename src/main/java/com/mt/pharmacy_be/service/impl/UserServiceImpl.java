@@ -9,12 +9,12 @@ import com.mt.pharmacy_be.exception.ApiException;
 import com.mt.pharmacy_be.mapper.UserMapper;
 import com.mt.pharmacy_be.repository.*;
 import com.mt.pharmacy_be.service.UserService;
-import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -16,7 +16,6 @@ import com.mt.pharmacy_be.repository.*;
 import com.mt.pharmacy_be.repository.specification.MedicineSpecification;
 import com.mt.pharmacy_be.repository.specification.SpecificationBuilder;
 import com.mt.pharmacy_be.service.MedicineService;
-import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
