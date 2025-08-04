@@ -2,8 +2,10 @@ package com.mt.pharmacy_be.controller;
 
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineRequestDTO;
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineSearchRequestDTO;
+import com.mt.pharmacy_be.service.MedicineBatchService;
 import com.mt.pharmacy_be.service.MedicineService;
 import com.mt.pharmacy_be.util.JsonResponse;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class MedicineController {
 
     MedicineService medicineService;
+    MedicineBatchService medicineBatchService;
 
     /**
      * Handles requests to retrieve all medicines with pagination.
@@ -26,7 +30,7 @@ public class MedicineController {
      * Date: 21/07/2025
      * Description: This endpoint retrieves a paginated list of all medicines.
      */
-    @PreAuthorize("permitAll()")
+    @PermitAll
     @GetMapping
     public ResponseEntity<?> getAll(@RequestParam(required = false, defaultValue = "1") int page,
                                     @RequestParam(required = false, defaultValue = "10") int pageSize) {
@@ -88,11 +92,24 @@ public class MedicineController {
      * Date: 22/07/2025
      * Description: This endpoint allows searching for medicines based on various criteria.
      */
-    @PreAuthorize("permitAll()")
+    @PermitAll
     @PostMapping("/search")
     public ResponseEntity<?> searchMedicines(@RequestBody MedicineSearchRequestDTO search,
                                              @RequestParam(required = false, defaultValue = "1") int page,
                                              @RequestParam(required = false, defaultValue = "10") int pageSize) {
         return JsonResponse.ok(medicineService.searchMedicines(search, page, pageSize));
+    }
+
+    /**
+     * Handles requests to export medicines to a CSV file.
+     * Author: Thanh Truc
+     * Date: 28/07/2025
+     * Description: This endpoint exports all medicines to a CSV file and returns it as a downloadable resource.
+     */
+    @PreAuthorize("hasAuthority('EMPLOYEE')")
+    @PostMapping("/batch/import")
+    public ResponseEntity<?> importMedicines(@RequestParam("file") MultipartFile file) {
+        medicineBatchService.importMedicineFromCsv(file);
+        return JsonResponse.ok("File import process started successfully.");
     }
 }

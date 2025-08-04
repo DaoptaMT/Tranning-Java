@@ -1,5 +1,6 @@
 package com.mt.pharmacy_be.mapper;
 
+import com.mt.pharmacy_be.dto.medicineDTO.MedicineCsvDTO;
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineRequestDTO;
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineResponseDTO;
 import com.mt.pharmacy_be.entity.Medicine;
@@ -23,4 +24,12 @@ public interface MedicineMapper {
      * Description: This method converts a MedicineRequestDTO to a Medicine entity.
      */
     Medicine toMedicineEntity(MedicineRequestDTO requestDTO);
+
+    /**
+     * Convert CSV DTO to Entity
+     * Author: Thanh Truc
+     * Date: 28/07/2024
+     * Description: This method converts a MedicineCsvDTO to a Medicine entity.
+     */
+    Medicine toMedicineEntity(MedicineCsvDTO requestDTO);
 }
