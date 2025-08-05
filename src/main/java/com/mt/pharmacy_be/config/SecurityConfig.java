@@ -43,7 +43,8 @@ public class SecurityConfig {
                                 "v3/api-docs/**",
                                 "/openapi.yml"
                         ).permitAll()
-                        .requestMatchers("/api/v1/files/upload").hasAuthority(RoleType.EMPLOYEE.name())
+                        .requestMatchers("/api/v1/files/upload",
+                                "/api/v1/medicines").hasAuthority(RoleType.EMPLOYEE.name())
                         .anyRequest().authenticated())
                 .sessionManagement(session
                         -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

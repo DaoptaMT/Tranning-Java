@@ -1,4 +1,4 @@
-package com.mt.pharmacy_be.config;
+package com.mt.pharmacy_be.config.batch;
 
 import com.mt.pharmacy_be.batch.listener.MedicineJobCompletionNotificationListener;
 import com.mt.pharmacy_be.batch.processor.MedicineCsvItemProcessor;

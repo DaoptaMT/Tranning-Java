@@ -3,7 +3,9 @@ package com.mt.pharmacy_be.service.impl;
 import com.mt.pharmacy_be.enums.ErrorCode;
 import com.mt.pharmacy_be.exception.ApiException;
 import com.mt.pharmacy_be.service.MedicineBatchService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
@@ -25,10 +27,11 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MedicineBatchServiceImpl implements MedicineBatchService {
 
-    private final JobLauncher jobLauncher;
-    private final ApplicationContext applicationContext;
+    JobLauncher jobLauncher;
+    ApplicationContext applicationContext;
 
     /**
      * Imports medicine data from a CSV file.
