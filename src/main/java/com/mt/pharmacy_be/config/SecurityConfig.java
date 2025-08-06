@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -41,9 +42,14 @@ public class SecurityConfig {
                                 "/api/v1/auth/**",
                                 "/swagger-ui/**",
                                 "v3/api-docs/**",
-                                "/openapi.yml"
+                                "/openapi.yml",
+                                "/api/v1/medicines/export/progress",
+                                "/api/v1/medicines/search",
+                                "/api/v1/medicines/{id}"
                         ).permitAll()
-                        .requestMatchers("/api/v1/files/upload").hasAuthority(RoleType.EMPLOYEE.name())
+                        .requestMatchers(HttpMethod.GET, "/api/v1/medicines").permitAll()
+                        .requestMatchers("/api/v1/files/upload",
+                                "/api/v1/medicines/**").hasAuthority(RoleType.EMPLOYEE.name())
                         .anyRequest().authenticated())
                 .sessionManagement(session
                         -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -87,7 +87,8 @@ public enum ErrorCode {
 
     // Batch Import 8***
     CSV_INVALID(8000, "Please upload a CSV file", HttpStatus.BAD_REQUEST),
-    CSV_ALREADY_PROCESSED(8001, "This file has already been processed", HttpStatus.BAD_REQUEST)
+    CSV_ALREADY_PROCESSED(8001, "This file has already been processed", HttpStatus.BAD_REQUEST),
+    CSV_DOWNLOAD_INVALID(8002, "CSV file is invalid or corrupted", HttpStatus.BAD_REQUEST)
     ;
 
     Integer code;

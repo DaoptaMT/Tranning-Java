@@ -13,15 +13,15 @@ import com.mt.pharmacy_be.enums.ErrorCode;
 import com.mt.pharmacy_be.exception.ApiException;
 import com.mt.pharmacy_be.mapper.MedicineMapper;
 import com.mt.pharmacy_be.repository.*;
-import com.mt.pharmacy_be.repository.specification.MedicineSpecification;
-import com.mt.pharmacy_be.repository.specification.SpecificationBuilder;
 import com.mt.pharmacy_be.service.MedicineService;
+import com.mt.pharmacy_be.util.MedicineSpecificationFactory;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -40,6 +40,7 @@ public class MedicineServiceImpl implements MedicineService {
     ImageMedicineRepository imageMedicineRepository;
     KindOfMedicineRepository kindOfMedicineRepository;
     UnitRepository unitRepository;
+    MedicineSpecificationFactory medicineSpecificationFactory;
 
     /**
      * Retrieves a paginated list of all medicines along with their unit details.
@@ -161,21 +162,8 @@ public class MedicineServiceImpl implements MedicineService {
     public PageResponse<?> searchMedicines(MedicineSearchRequestDTO request, int page, int pageSize) {
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, pageSize);
 
-        SpecificationBuilder<Medicine> builder = new SpecificationBuilder<>();
-
-        builder.and(MedicineSpecification.hasCode(request.getCode()))
-                .and(MedicineSpecification.hasName(request.getName()))
-                .and(MedicineSpecification.minPrice(parseDouble(request.getMinPrice())))
-                .and(MedicineSpecification.maxPrice(parseDouble(request.getMaxPrice())))
-                .and(MedicineSpecification.minQuantity(parseLong(request.getMinQuantity())))
-                .and(MedicineSpecification.maxQuantity(parseLong(request.getMaxQuantity())))
-                .and(MedicineSpecification.hasMaker(request.getMaker()))
-                .and(MedicineSpecification.hasOrigin(request.getOrigin()))
-                .and(MedicineSpecification.hasActiveElement(request.getActiveElement()))
-                .and(MedicineSpecification.hasKindOfMedicine(parseLong(request.getKindOfMedicineId())))
-                .and(MedicineSpecification.sortPrice(request.getSortPrice()));
-
-        Page<Medicine> medicinePage = medicineRepository.findAll(builder.build(), pageable);
+        Specification<Medicine> specification = medicineSpecificationFactory.buildMedicineSpecification(request);
+        Page<Medicine> medicinePage = medicineRepository.findAll(specification, pageable);
 
         List<MedicineResponseDTO> medicineResponseDTOList = medicinePage
                 .map(this::getMedicineResponseDTO)
@@ -188,27 +176,6 @@ public class MedicineServiceImpl implements MedicineService {
                 .items(medicineResponseDTOList)
                 .build();
     }
-
-    /**
-     * Parses a string to a Double, returning null if the string is null or blank.
-     * Author: Thanh Truc
-     * Date: 22/07/2025
-     * Description: This method converts a string representation of a number to a Double.
-     */
-    private Double parseDouble(String value) {
-        return (value == null || value.isBlank()) ? null : Double.valueOf(value);
-    }
-
-    /**
-     * Parses a string to along, returning null if the string is null or blank.
-     * Author: Thanh Truc
-     * Date: 22/07/2025
-     * Description: This method converts a string representation of a number to along.
-     */
-    private Long parseLong(String value) {
-        return (value == null || value.isBlank()) ? null : Long.valueOf(value);
-    }
-
 
     /**
      * Saves the unit details for a medicine based on the request data.

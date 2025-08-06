@@ -31,4 +31,21 @@ public class AsyncConfig {
         executor.initialize();
         return executor;
     }
+
+    /**
+     * Configures a ThreadPoolTaskExecutor specifically for export tasks.
+     * Author: Thanh Truc
+     * Date: 05/08/2025
+     * Description: This method sets up a ThreadPoolTaskExecutor for export operations with a dedicated configuration.
+     */
+    @Bean(name = "exportExecutor")
+    public Executor exportExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(4);
+        executor.setMaxPoolSize(8);
+        executor.setQueueCapacity(20);
+        executor.setThreadNamePrefix("export-");
+        executor.initialize();
+        return executor;
+    }
 }
