@@ -3,7 +3,7 @@ package com.mt.pharmacy_be.config.batch;
 import com.mt.pharmacy_be.batch.listener.MedicineJobCompletionNotificationListener;
 import com.mt.pharmacy_be.batch.processor.MedicineCsvItemProcessor;
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineCsvDTO;
-import com.mt.pharmacy_be.entity.Medicine;
+import com.mt.pharmacy_be.entity.MedicineEntity;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -84,8 +84,8 @@ public class MedicineBatchConfig {
     }
 
     @Bean
-    public JpaItemWriter<Medicine> medicineJpaItemWriter(EntityManagerFactory entityManagerFactory) {
-        JpaItemWriter<Medicine> writer = new JpaItemWriter<>();
+    public JpaItemWriter<MedicineEntity> medicineJpaItemWriter(EntityManagerFactory entityManagerFactory) {
+        JpaItemWriter<MedicineEntity> writer = new JpaItemWriter<>();
         writer.setEntityManagerFactory(entityManagerFactory);
         return writer;
     }
@@ -100,7 +100,7 @@ public class MedicineBatchConfig {
     @Bean
     public Step importMedicineStep(FlatFileItemReader<MedicineCsvDTO> medicineReader) {
         return new StepBuilder("importMedicineStep", jobRepository)
-                .<MedicineCsvDTO, Medicine>chunk(50, transactionManager)
+                .<MedicineCsvDTO, MedicineEntity>chunk(50, transactionManager)
                 .reader(medicineReader)
                 .processor(medicineCsvItemProcessor)
                 .writer(medicineJpaItemWriter(entityManagerFactory))

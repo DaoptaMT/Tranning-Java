@@ -1,11 +1,11 @@
-ALTER TABLE medicine
+ALTER TABLE medicineEntity
 DROP
 FOREIGN KEY FK_MEDICINE_ON_KIND_OF_MEDICINE;
 
 ALTER TABLE kind_of_medicine
     MODIFY COLUMN id BIGINT NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE medicine
+ALTER TABLE medicineEntity
     ADD CONSTRAINT FK_MEDICINE_ON_KIND_OF_MEDICINE
         FOREIGN KEY (kind_of_medicine_id)
             REFERENCES kind_of_medicine (id);

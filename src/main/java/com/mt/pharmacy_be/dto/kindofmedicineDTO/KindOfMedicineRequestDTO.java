@@ -8,10 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class KindOfMedicineRequestDTO {
 
-
-    @NotBlank(message = "CODE_INVALID")
-    private String code;
-
     @NotBlank(message = "NAME_INVALID")
     private String name;
 

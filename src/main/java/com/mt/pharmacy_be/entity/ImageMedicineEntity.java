@@ -1,20 +1,27 @@
 package com.mt.pharmacy_be.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Where;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "patient")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Where(clause = "flag_deleted = false")
-public class Patient {
+@Table(name = "image_medicine")
+public class ImageMedicineEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+
+    private String image_path;
+
     private boolean flag_deleted;
 
+    @ManyToOne()
+    @JoinColumn(name = "medicine_id")
+    private MedicineEntity medicineEntity;
 }

@@ -1,7 +1,7 @@
 package com.mt.pharmacy_be.util;
 
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineSearchRequestDTO;
-import com.mt.pharmacy_be.entity.Medicine;
+import com.mt.pharmacy_be.entity.MedicineEntity;
 import com.mt.pharmacy_be.repository.specification.MedicineSpecification;
 import com.mt.pharmacy_be.repository.specification.SpecificationBuilder;
 import org.springframework.data.jpa.domain.Specification;
@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class MedicineSpecificationFactory {
 
-    public Specification<Medicine> buildMedicineSpecification(MedicineSearchRequestDTO request) {
-        SpecificationBuilder<Medicine> builder = new SpecificationBuilder<>();
+    public Specification<MedicineEntity> buildMedicineSpecification(MedicineSearchRequestDTO request) {
+        SpecificationBuilder<MedicineEntity> builder = new SpecificationBuilder<>();
 
         builder.and(MedicineSpecification.hasCode(request.getCode()))
                 .and(MedicineSpecification.hasName(request.getName()))

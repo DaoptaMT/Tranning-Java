@@ -3,23 +3,30 @@ package com.mt.pharmacy_be.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "indication")
-public class Indication {
+@Where(clause = "flag_deleted = false")
+public class IndicationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Integer dosage;
+
     private Integer frequency;
+
     private boolean flag_deleted;
+
     @ManyToOne()
     @JoinColumn(name = "medicine_id")
-    private  Medicine medicine;
+    private MedicineEntity medicineEntity;
+
     @ManyToOne()
-    @JoinColumn(name = "perscription_id")
-    private Prescription prescription;
+    @JoinColumn(name = "prescription_id")
+    private PrescriptionEntity prescriptionEntity;
 
 }

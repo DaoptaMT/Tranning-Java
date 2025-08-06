@@ -1,8 +1,8 @@
 package com.mt.pharmacy_be.batch.processor;
 
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineCsvDTO;
-import com.mt.pharmacy_be.entity.Kind_Of_Medicine;
-import com.mt.pharmacy_be.entity.Medicine;
+import com.mt.pharmacy_be.entity.KindOfMedicineEntity;
+import com.mt.pharmacy_be.entity.MedicineEntity;
 import com.mt.pharmacy_be.mapper.MedicineMapper;
 import com.mt.pharmacy_be.repository.KindOfMedicineRepository;
 import com.mt.pharmacy_be.repository.MedicineRepository;
@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class MedicineCsvItemProcessor implements ItemProcessor<MedicineCsvDTO, Medicine> {
+public class MedicineCsvItemProcessor implements ItemProcessor<MedicineCsvDTO, MedicineEntity> {
 
     private final KindOfMedicineRepository kindOfMedicineRepository;
     private final MedicineRepository medicineRepository;
@@ -38,14 +38,14 @@ public class MedicineCsvItemProcessor implements ItemProcessor<MedicineCsvDTO, M
     private final Map<String, Set<Long>> existingMedicinesCache = new ConcurrentHashMap<>();
 
     // Cache for kind of medicines
-    private final Map<Long, Kind_Of_Medicine> kindOfMedicineCache = new ConcurrentHashMap<>();
+    private final Map<Long, KindOfMedicineEntity> kindOfMedicineCache = new ConcurrentHashMap<>();
 
     private boolean cacheInitialized = false;
 
     private static final int BATCH_SIZE = 500;
 
     @Override
-    public Medicine process(MedicineCsvDTO item) throws Exception {
+    public MedicineEntity process(MedicineCsvDTO item) throws Exception {
         log.info("Processing medicine data: {}", item);
 
         if (!cacheInitialized) {
@@ -75,26 +75,26 @@ public class MedicineCsvItemProcessor implements ItemProcessor<MedicineCsvDTO, M
             }
         }
 
-        Medicine medicine = medicineMapper.toMedicineEntity(item);
+        MedicineEntity medicineEntity = medicineMapper.toMedicineEntity(item);
 
         if (StringUtils.hasText(item.getKindOfMedicineId())) {
             Long kindOfMedicineId = Long.parseLong(item.getKindOfMedicineId());
 
-            Kind_Of_Medicine kindOfMedicine = kindOfMedicineCache.get(kindOfMedicineId);
+            KindOfMedicineEntity kindOfMedicineEntity = kindOfMedicineCache.get(kindOfMedicineId);
 
-            if (kindOfMedicine == null) {
+            if (kindOfMedicineEntity == null) {
                 // If not in cache, fetch from database and update cache
-                Optional<Kind_Of_Medicine> kindOfMedicineOpt = kindOfMedicineRepository.findById(kindOfMedicineId);
+                Optional<KindOfMedicineEntity> kindOfMedicineOpt = kindOfMedicineRepository.findById(kindOfMedicineId);
                 if (kindOfMedicineOpt.isPresent()) {
-                    kindOfMedicine = kindOfMedicineOpt.get();
-                    kindOfMedicineCache.put(kindOfMedicineId, kindOfMedicine);
+                    kindOfMedicineEntity = kindOfMedicineOpt.get();
+                    kindOfMedicineCache.put(kindOfMedicineId, kindOfMedicineEntity);
                 } else {
                     log.warn("Kind of medicine with ID {} not found", kindOfMedicineId);
                 }
             }
 
-            if (kindOfMedicine != null) {
-                medicine.setKindOfMedicine(kindOfMedicine);
+            if (kindOfMedicineEntity != null) {
+                medicineEntity.setKindOfMedicineEntity(kindOfMedicineEntity);
 
                 // Update cache with new medicine
                 if (StringUtils.hasText(item.getName())) {
@@ -105,11 +105,11 @@ public class MedicineCsvItemProcessor implements ItemProcessor<MedicineCsvDTO, M
             }
         }
 
-        medicine.setCode(String.valueOf(new Random().nextInt(1000000)));
-        medicine.setFlagDeleted(false);
+        medicineEntity.setCode(String.valueOf(new Random().nextInt(1000000)));
+        medicineEntity.setFlagDeleted(false);
 
-        log.info("Successfully processed medicine: {}", medicine);
-        return medicine;
+        log.info("Successfully processed medicine: {}", medicineEntity);
+        return medicineEntity;
     }
 
     private void initializeCache() {
@@ -122,24 +122,24 @@ public class MedicineCsvItemProcessor implements ItemProcessor<MedicineCsvDTO, M
         // Load medicines using pagination to avoid loading all data at once
         while (hasMoreMedicines) {
             Pageable pageable = PageRequest.of(pageNumber, BATCH_SIZE);
-            Page<Medicine> medicinePage = medicineRepository.findAll(pageable);
+            Page<MedicineEntity> medicinePage = medicineRepository.findAll(pageable);
 
             if (medicinePage.hasContent()) {
-                List<Medicine> medicineBatch = medicinePage.getContent();
-                totalMedicines += medicineBatch.size();
+                List<MedicineEntity> medicineEntityBatches = medicinePage.getContent();
+                totalMedicines += medicineEntityBatches.size();
 
-                for (Medicine medicine : medicineBatch) {
-                    if (medicine.getName() != null) {
-                        String name = medicine.getName().toLowerCase();
+                for (MedicineEntity medicineEntity : medicineEntityBatches) {
+                    if (medicineEntity.getName() != null) {
+                        String name = medicineEntity.getName().toLowerCase();
 
                         // Add to existing medicines cache
-                        if (medicine.getKindOfMedicine() != null) {
-                            Long kindId = medicine.getKindOfMedicine().getId();
+                        if (medicineEntity.getKindOfMedicineEntity() != null) {
+                            Long kindId = medicineEntity.getKindOfMedicineEntity().getId();
                             existingMedicinesCache.computeIfAbsent(name, k -> new HashSet<>())
                                                  .add(kindId);
 
                             // Cache the kind of medicine as well
-                            kindOfMedicineCache.putIfAbsent(kindId, medicine.getKindOfMedicine());
+                            kindOfMedicineCache.putIfAbsent(kindId, medicineEntity.getKindOfMedicineEntity());
                         } else {
                             existingMedicinesCache.putIfAbsent(name, new HashSet<>());
                         }
@@ -151,7 +151,7 @@ public class MedicineCsvItemProcessor implements ItemProcessor<MedicineCsvDTO, M
                 pageNumber++;
 
                 log.info("Loaded batch {} of medicines, batch size: {}",
-                        pageNumber, medicineBatch.size());
+                        pageNumber, medicineEntityBatches.size());
             } else {
                 hasMoreMedicines = false;
             }
@@ -164,10 +164,10 @@ public class MedicineCsvItemProcessor implements ItemProcessor<MedicineCsvDTO, M
 
         while (hasMoreKinds) {
             Pageable pageable = PageRequest.of(pageNumber, BATCH_SIZE);
-            Page<Kind_Of_Medicine> kindPage = kindOfMedicineRepository.findAll(pageable);
+            Page<KindOfMedicineEntity> kindPage = kindOfMedicineRepository.findAll(pageable);
 
             if (kindPage.hasContent()) {
-                List<Kind_Of_Medicine> kindBatch = kindPage.getContent();
+                List<KindOfMedicineEntity> kindBatch = kindPage.getContent();
                 totalKinds += kindBatch.size();
 
                 kindBatch.forEach(kind ->

@@ -8,13 +8,16 @@ import org.hibernate.annotations.Where;
 @Getter
 @Setter
 @Entity
-@Table(name = "unit")
+@Table(name = "patient")
 @Where(clause = "flag_deleted = false")
-public class Unit {
+public class PatientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
+
     private String name;
+
     private boolean flag_deleted;
 
 }

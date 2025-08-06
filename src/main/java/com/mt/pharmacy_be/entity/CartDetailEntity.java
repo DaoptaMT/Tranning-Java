@@ -3,13 +3,14 @@ package com.mt.pharmacy_be.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.query.Order;
+import org.hibernate.annotations.Where;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "cart_details")
-public class Cart_Details {
+@Where(clause = "flag_deleted = false")
+public class CartDetailEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +24,7 @@ public class Cart_Details {
 
     @ManyToOne
     @JoinColumn(name = "medicine_id")
-    private Medicine medicine;
+    private MedicineEntity medicineEntity;
 
     private Long quantity;
 

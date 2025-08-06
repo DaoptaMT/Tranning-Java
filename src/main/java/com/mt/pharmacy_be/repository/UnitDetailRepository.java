@@ -16,5 +16,5 @@ public interface UnitDetailRepository extends JpaRepository<Unit_Detail, Long> {
      * Date: 21/07/2025
      * Description: This method retrieves a list of Unit_Detail entities associated with a specific Medicine ID.
      */
-    List<Unit_Detail> findByMedicineId(@Param("id") Long id);
+    List<Unit_Detail> findByMedicineEntityId(@Param("id") Long id);
 }
