@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.ServerSentEvent;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
@@ -37,7 +38,6 @@ public class MedicineController {
      * Date: 21/07/2025
      * Description: This endpoint retrieves a paginated list of all medicines.
      */
-    @PermitAll
     @GetMapping
     public ResponseEntity<?> getAll(@RequestParam(required = false, defaultValue = "1") int page,
                                     @RequestParam(required = false, defaultValue = "10") int pageSize) {
@@ -50,7 +50,6 @@ public class MedicineController {
      * Date: 21/07/2025
      * Description: This endpoint retrieves a specific medicine by its ID.
      */
-    @PermitAll
     @GetMapping("{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
         return JsonResponse.ok(medicineService.getById(id));
@@ -97,7 +96,6 @@ public class MedicineController {
      * Date: 22/07/2025
      * Description: This endpoint allows searching for medicines based on various criteria.
      */
-    @PermitAll
     @PostMapping("/search")
     public ResponseEntity<?> searchMedicines(@RequestBody MedicineSearchRequestDTO search,
                                              @RequestParam(required = false, defaultValue = "1") int page,
@@ -160,7 +158,6 @@ public class MedicineController {
      * Date: 05/08/2025
      * Description: This endpoint provides a real-time stream of export progress updates.
      */
-    @PermitAll
     @GetMapping(value = "/export/progress", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent<ExportProgressDTO>> streamExportProgress() {
         return medicineExportService.streamProgressAsFlux()
