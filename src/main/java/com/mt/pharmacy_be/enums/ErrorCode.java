@@ -85,6 +85,8 @@ public enum ErrorCode {
     UNIT_NOT_FOUND(6000, "Unit not found", HttpStatus.BAD_REQUEST),
     UNIT_ID_NOT_NULL(6001, "Unit ID must be not null", HttpStatus.BAD_REQUEST),
     UNIT_ID_MIN_1(6002, "Unit ID must be greater than or equal to 1", HttpStatus.BAD_REQUEST),
+    UNIT_NAME_INVALID(6003, "Unit name must be not blank", HttpStatus.BAD_REQUEST),
+    UNIT_ALREADY_EXISTS(6004, "Unit already exists", HttpStatus.BAD_REQUEST),
 
     // Image Medicine 7***
     IMAGE_NOT_FOUND(7000, "Image not found", HttpStatus.BAD_REQUEST),

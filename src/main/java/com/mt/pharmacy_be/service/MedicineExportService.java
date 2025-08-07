@@ -1,6 +1,6 @@
 package com.mt.pharmacy_be.service;
 
-import com.mt.pharmacy_be.dto.export.ExportProgressDTO;
+import com.mt.pharmacy_be.dto.exportDTO.ExportProgressDTO;
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineSearchRequestDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
