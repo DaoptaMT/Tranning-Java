@@ -3,7 +3,7 @@ package com.mt.pharmacy_be.service.impl;
 import com.mt.pharmacy_be.dto.PageResponse;
 import com.mt.pharmacy_be.dto.unitDTO.UnitRequestDTO;
 import com.mt.pharmacy_be.dto.unitDTO.UnitResponseDTO;
-import com.mt.pharmacy_be.entity.Unit;
+import com.mt.pharmacy_be.entity.UnitEntity;
 import com.mt.pharmacy_be.enums.ErrorCode;
 import com.mt.pharmacy_be.exception.ApiException;
 import com.mt.pharmacy_be.mapper.UnitMapper;
@@ -31,7 +31,7 @@ public class UnitServiceImpl implements UnitService {
     @Override
     public PageResponse<?> getAll(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, pageSize);
-        Page<Unit> unitPage = unitRepository.findAll(pageable);
+        Page<UnitEntity> unitPage = unitRepository.findAll(pageable);
         List<UnitResponseDTO> unitResponseDTOS = unitPage.map(unitMapper::toUnitResponseDTO)
                 .stream().collect(Collectors.toList());
 
@@ -45,7 +45,7 @@ public class UnitServiceImpl implements UnitService {
 
     @Override
     public UnitResponseDTO getById(Long id) {
-        Unit unit = unitRepository.findById(id)
+        UnitEntity unit = unitRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorCode.UNIT_NOT_FOUND));
         return unitMapper.toUnitResponseDTO(unit);
     }
@@ -55,16 +55,16 @@ public class UnitServiceImpl implements UnitService {
         if (unitRepository.existsByName(unit.getName())) {
             throw new ApiException(ErrorCode.UNIT_ALREADY_EXISTS);
         }
-        Unit newUnit = unitMapper.toUnit(unit);
+        UnitEntity newUnit = unitMapper.toUnit(unit);
         newUnit.setFlag_deleted(false);
 
-        Unit savedUnit = unitRepository.save(newUnit);
+        UnitEntity savedUnit = unitRepository.save(newUnit);
         return unitMapper.toUnitResponseDTO(savedUnit);
     }
 
     @Override
     public UnitResponseDTO update(Long id, UnitRequestDTO updatedUnit) {
-        Unit existingUnit = unitRepository.findById(id)
+        UnitEntity existingUnit = unitRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorCode.UNIT_NOT_FOUND));
 
         if (unitRepository.existsByName(updatedUnit.getName()) &&
@@ -72,7 +72,7 @@ public class UnitServiceImpl implements UnitService {
             throw new ApiException(ErrorCode.UNIT_ALREADY_EXISTS);
         }
 
-        Unit newUnit = unitMapper.toUnit(updatedUnit);
+        UnitEntity newUnit = unitMapper.toUnit(updatedUnit);
         newUnit.setId(id);
 
         unitRepository.save(newUnit);
@@ -81,7 +81,7 @@ public class UnitServiceImpl implements UnitService {
 
     @Override
     public void delete(Long id) {
-        Unit unit = unitRepository.findById(id)
+        UnitEntity unit = unitRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorCode.UNIT_NOT_FOUND));
 
         unit.setFlag_deleted(true);
@@ -92,7 +92,7 @@ public class UnitServiceImpl implements UnitService {
     @Override
     public PageResponse<?> searchByName(String name, int page, int pageSize) {
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, pageSize);
-        Page<Unit> unitPage = unitRepository.findByName(name, pageable);
+        Page<UnitEntity> unitPage = unitRepository.findByName(name, pageable);
         List<UnitResponseDTO> unitResponseDTOS = unitPage.map(unitMapper::toUnitResponseDTO)
                 .stream().collect(Collectors.toList());
         return PageResponse.builder()

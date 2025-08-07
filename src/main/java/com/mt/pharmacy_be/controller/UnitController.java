@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -47,6 +48,7 @@ public class UnitController {
      * Date: 06/08/2025
      * Description: This endpoint creates a new unit in the system.
      */
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE', 'ADMIN')")
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody @Valid UnitRequestDTO unit) {
         return JsonResponse.ok(unitService.create(unit));
@@ -58,6 +60,7 @@ public class UnitController {
      * Date: 06/08/2025
      * Description: This endpoint updates an existing unit in the system.
      */
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE', 'ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id,
                                    @RequestBody @Valid UnitRequestDTO unit) {
@@ -70,6 +73,7 @@ public class UnitController {
      * Date: 06/08/2025
      * Description: This endpoint deletes a specific unit by its ID.
      */
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE', 'ADMIN')")
     @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         unitService.delete(id);

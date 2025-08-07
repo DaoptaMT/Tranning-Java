@@ -29,6 +29,9 @@ public class KindOfMedicineServiceImpl implements KindOfMedicineService {
 
     @Override
     public KindOfMedicineResponseDTO createKindOfMedicine(KindOfMedicineRequestDTO requestDTO) {
+        if (kindOfMedicineRepository.existsByName(requestDTO.getName())) {
+            throw new ApiException(ErrorCode.KIND_EXISTED);
+        }
         KindOfMedicineEntity kindOfMedicineEntity = modelMapper.map(requestDTO, KindOfMedicineEntity.class);
 
         kindOfMedicineEntity.setCode(String.valueOf(new Random().nextInt(1000000)));
@@ -94,6 +97,11 @@ public class KindOfMedicineServiceImpl implements KindOfMedicineService {
     public KindOfMedicineResponseDTO updateKindOfMedicine(Long id, KindOfMedicineRequestDTO kindOfMedicineRequestDTO) {
         KindOfMedicineEntity existingEntity = kindOfMedicineRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorCode.KIND_NOT_FOUND));
+
+        if (kindOfMedicineRepository.existsByName(kindOfMedicineRequestDTO.getName()) &&
+                !existingEntity.getName().equals(kindOfMedicineRequestDTO.getName())) {
+            throw new ApiException(ErrorCode.KIND_EXISTED);
+        }
 
         KindOfMedicineEntity kindOfMedicineEntity = modelMapper.map(kindOfMedicineRequestDTO, KindOfMedicineEntity.class);
 

@@ -13,4 +13,6 @@ public interface KindOfMedicineRepository extends JpaRepository<KindOfMedicineEn
     Optional<KindOfMedicineEntity> findByCode(String code);
 
     Page<KindOfMedicineEntity> findByName(String name, Pageable pageable);
+
+    Boolean existsByName(String name);
 }
