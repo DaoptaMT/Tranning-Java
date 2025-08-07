@@ -28,6 +28,6 @@ public class MedicineResponseDTO {
     Float retailProfit;
     String activeElement;
     List<String> images;
-    KindOfMedicineResponseDTO kindOfMedicine;
+    KindOfMedicineResponseDTO kindOfMedicineEntity;
     List<UnitDetailResponseDTO> unitDetails;
 }

@@ -8,7 +8,7 @@ import com.mt.pharmacy_be.dto.unitDetailDTO.UnitDetailResponseDTO;
 import com.mt.pharmacy_be.entity.ImageMedicineEntity;
 import com.mt.pharmacy_be.entity.KindOfMedicineEntity;
 import com.mt.pharmacy_be.entity.MedicineEntity;
-import com.mt.pharmacy_be.entity.Unit_Detail;
+import com.mt.pharmacy_be.entity.UnitDetailEntity;
 import com.mt.pharmacy_be.enums.ErrorCode;
 import com.mt.pharmacy_be.exception.ApiException;
 import com.mt.pharmacy_be.mapper.MedicineMapper;
@@ -184,8 +184,8 @@ public class MedicineServiceImpl implements MedicineService {
      * Description: This method processes the unit details from the request,
      */
     private void saveListUnitDetail(MedicineRequestDTO request, MedicineEntity medicineEntity) {
-        List<Unit_Detail> unitDetails = request.getUnitDetails().stream()
-                .map(unitDetailDTO -> Unit_Detail.builder()
+        List<UnitDetailEntity> unitDetails = request.getUnitDetails().stream()
+                .map(unitDetailDTO -> UnitDetailEntity.builder()
                         .conversion_unit(unitDetailDTO.getConversionUnit())
                         .medicineEntity(medicineEntity)
                         .unitEntity(unitRepository.findById(unitDetailDTO.getUnitId())
@@ -204,7 +204,8 @@ public class MedicineServiceImpl implements MedicineService {
     private MedicineResponseDTO getMedicineResponseDTO(MedicineEntity medicineEntity) {
         MedicineResponseDTO responseDTO = medicineMapper.toMedicineResponseDTO(medicineEntity);
 
-        List<UnitDetailResponseDTO> unitDetails = unitDetailRepository.findByMedicineEntityId(medicineEntity.getId())
+        List<UnitDetailResponseDTO> unitDetails = unitDetailRepository
+                .findValidUnitDetailsByMedicineEntityId(medicineEntity.getId())
                 .stream()
                 .map(unitDetail -> UnitDetailResponseDTO.builder()
                         .conversionUnit(unitDetail.getConversion_unit())
