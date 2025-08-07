@@ -3,7 +3,7 @@ package com.mt.pharmacy_be.mapper;
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineCsvDTO;
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineRequestDTO;
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineResponseDTO;
-import com.mt.pharmacy_be.entity.Medicine;
+import com.mt.pharmacy_be.entity.MedicineEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
@@ -15,7 +15,7 @@ public interface MedicineMapper {
      * Date: 21/07/2015
      * Description: This method converts a Medicine entity to a MedicineResponseDTO.
      */
-    MedicineResponseDTO toMedicineResponseDTO(Medicine medicine);
+    MedicineResponseDTO toMedicineResponseDTO(MedicineEntity medicineEntity);
 
     /**
      * Convert Request to Entity
@@ -23,7 +23,7 @@ public interface MedicineMapper {
      * Date: 22/07/2015
      * Description: This method converts a MedicineRequestDTO to a Medicine entity.
      */
-    Medicine toMedicineEntity(MedicineRequestDTO requestDTO);
+    MedicineEntity toMedicineEntity(MedicineRequestDTO requestDTO);
 
     /**
      * Convert CSV DTO to Entity
@@ -31,5 +31,5 @@ public interface MedicineMapper {
      * Date: 28/07/2024
      * Description: This method converts a MedicineCsvDTO to a Medicine entity.
      */
-    Medicine toMedicineEntity(MedicineCsvDTO requestDTO);
+    MedicineEntity toMedicineEntity(MedicineCsvDTO requestDTO);
 }

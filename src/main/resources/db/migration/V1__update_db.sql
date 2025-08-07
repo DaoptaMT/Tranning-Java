@@ -13,7 +13,7 @@ CREATE TABLE kind_of_medicine (
    CONSTRAINT pk_kind_of_medicine PRIMARY KEY (id)
 );
 
-CREATE TABLE medicine (
+CREATE TABLE medicineEntity (
   id BIGINT AUTO_INCREMENT NOT NULL,
    code VARCHAR(255) NULL,
    name VARCHAR(255) NULL,
@@ -30,7 +30,7 @@ CREATE TABLE medicine (
    CONSTRAINT pk_medicine PRIMARY KEY (id)
 );
 
-ALTER TABLE medicine ADD CONSTRAINT FK_MEDICINE_ON_KIND_OF_MEDICINE FOREIGN KEY (kind_of_medicine_id) REFERENCES kind_of_medicine (id);
+ALTER TABLE medicineEntity ADD CONSTRAINT FK_MEDICINE_ON_KIND_OF_MEDICINE FOREIGN KEY (kind_of_medicine_id) REFERENCES kind_of_medicine (id);
 
 
 CREATE TABLE prescription (
@@ -58,7 +58,7 @@ CREATE TABLE indication (
    CONSTRAINT pk_indication PRIMARY KEY (id)
 );
 
-ALTER TABLE indication ADD CONSTRAINT FK_INDICATION_ON_MEDICINE FOREIGN KEY (medicine_id) REFERENCES medicine (id);
+ALTER TABLE indication ADD CONSTRAINT FK_INDICATION_ON_MEDICINE FOREIGN KEY (medicine_id) REFERENCES medicineEntity (id);
 
 ALTER TABLE indication ADD CONSTRAINT FK_INDICATION_ON_PERSCRIPTION FOREIGN KEY (perscription_id) REFERENCES prescription (id);
 
@@ -71,7 +71,7 @@ CREATE TABLE image_medicine (
    CONSTRAINT pk_image_medicine PRIMARY KEY (id)
 );
 
-ALTER TABLE image_medicine ADD CONSTRAINT FK_IMAGE_MEDICINE_ON_MEDICINE FOREIGN KEY (medicine_id) REFERENCES medicine (id);
+ALTER TABLE image_medicine ADD CONSTRAINT FK_IMAGE_MEDICINE_ON_MEDICINE FOREIGN KEY (medicine_id) REFERENCES medicineEntity (id);
 
 
 
@@ -92,7 +92,7 @@ CREATE TABLE unit_detail (
    CONSTRAINT pk_unit_detail PRIMARY KEY (id)
 );
 
-ALTER TABLE unit_detail ADD CONSTRAINT FK_UNIT_DETAIL_ON_MEDICINE FOREIGN KEY (medicine_id) REFERENCES medicine (id);
+ALTER TABLE unit_detail ADD CONSTRAINT FK_UNIT_DETAIL_ON_MEDICINE FOREIGN KEY (medicine_id) REFERENCES medicineEntity (id);
 
 ALTER TABLE unit_detail ADD CONSTRAINT FK_UNIT_DETAIL_ON_UNIT FOREIGN KEY (unit_id) REFERENCES unit (id);
 
@@ -109,7 +109,7 @@ CREATE TABLE cart_details (
 
 ALTER TABLE cart_details ADD CONSTRAINT FK_CART_DETAILS_ON_APP_USER FOREIGN KEY (app_user_id) REFERENCES app_user (id);
 
-ALTER TABLE cart_details ADD CONSTRAINT FK_CART_DETAILS_ON_MEDICINE FOREIGN KEY (medicine_id) REFERENCES medicine (id);
+ALTER TABLE cart_details ADD CONSTRAINT FK_CART_DETAILS_ON_MEDICINE FOREIGN KEY (medicine_id) REFERENCES medicineEntity (id);
 
 
 CREATE TABLE invoice_details (
@@ -125,7 +125,7 @@ CREATE TABLE invoice_details (
 
 ALTER TABLE invoice_details ADD CONSTRAINT FK_INVOICE_DETAILS_ON_INVOICE FOREIGN KEY (invoice_id) REFERENCES invoice (id);
 
-ALTER TABLE invoice_details ADD CONSTRAINT FK_INVOICE_DETAILS_ON_MEDICINE FOREIGN KEY (medicine_id) REFERENCES medicine (id);
+ALTER TABLE invoice_details ADD CONSTRAINT FK_INVOICE_DETAILS_ON_MEDICINE FOREIGN KEY (medicine_id) REFERENCES medicineEntity (id);
 
 
 CREATE TABLE order_details (
@@ -137,6 +137,6 @@ CREATE TABLE order_details (
    CONSTRAINT pk_order_details PRIMARY KEY (id)
 );
 
-ALTER TABLE order_details ADD CONSTRAINT FK_ORDER_DETAILS_ON_MEDICINE FOREIGN KEY (medicine_id) REFERENCES medicine (id);
+ALTER TABLE order_details ADD CONSTRAINT FK_ORDER_DETAILS_ON_MEDICINE FOREIGN KEY (medicine_id) REFERENCES medicineEntity (id);
 
 ALTER TABLE order_details ADD CONSTRAINT FK_ORDER_DETAILS_ON_ORDER FOREIGN KEY (order_id) REFERENCES `order` (id);

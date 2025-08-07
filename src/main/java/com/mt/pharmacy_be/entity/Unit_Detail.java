@@ -16,13 +16,17 @@ public class Unit_Detail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private boolean flag_deleted;
+
     private Long conversion_unit;
+
     @ManyToOne()
     @JoinColumn(name = "medicine_id")
-    private Medicine medicine;
+    private MedicineEntity medicineEntity;
+
     @ManyToOne()
     @JoinColumn(name = "unit_id")
-    private Unit unit;
+    private UnitEntity unitEntity;
 
 }

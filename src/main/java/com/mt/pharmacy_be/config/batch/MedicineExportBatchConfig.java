@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mt.pharmacy_be.batch.listener.ExportJobListener;
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineSearchRequestDTO;
-import com.mt.pharmacy_be.entity.Medicine;
+import com.mt.pharmacy_be.entity.MedicineEntity;
 import com.mt.pharmacy_be.repository.MedicineRepository;
 import com.mt.pharmacy_be.util.MedicineSpecificationFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -51,10 +51,10 @@ public class MedicineExportBatchConfig {
 
     @Bean
     public Step exportStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
-                           RepositoryItemReader<Medicine> medicineExportReader,
-                           FlatFileItemWriter<Medicine> csvMedicineWriter) {
+                           RepositoryItemReader<MedicineEntity> medicineExportReader,
+                           FlatFileItemWriter<MedicineEntity> csvMedicineWriter) {
         return new StepBuilder("exportStep", jobRepository)
-                .<Medicine, Medicine>chunk(500, transactionManager)
+                .<MedicineEntity, MedicineEntity>chunk(500, transactionManager)
                 .reader(medicineExportReader)
                 .writer(csvMedicineWriter)
                 .taskExecutor(batchExportTaskExecutor())
@@ -63,7 +63,7 @@ public class MedicineExportBatchConfig {
 
     @Bean
     @StepScope
-    public RepositoryItemReader<Medicine> dynamicMedicineExportReader(
+    public RepositoryItemReader<MedicineEntity> dynamicMedicineExportReader(
             @Value("#{jobParameters['exportType']}") String exportType,
             @Value("#{jobParameters['searchCriteria']}") String searchCriteriaJson,
             @Value("#{jobParameters['page']}") Long page,
@@ -72,7 +72,7 @@ public class MedicineExportBatchConfig {
             MedicineSpecificationFactory specificationFactory,
             MedicineRepository medicineRepository
     ) throws JsonProcessingException {
-        Specification<Medicine> specification = (root, query, cb)
+        Specification<MedicineEntity> specification = (root, query, cb)
                 -> cb.conjunction();
 
         if ("filtered".equalsIgnoreCase(exportType) && StringUtils.hasText(searchCriteriaJson)) {
@@ -80,7 +80,7 @@ public class MedicineExportBatchConfig {
             specification = specificationFactory.buildMedicineSpecification(request);
         }
 
-        RepositoryItemReader<Medicine> reader = new RepositoryItemReader<>();
+        RepositoryItemReader<MedicineEntity> reader = new RepositoryItemReader<>();
         reader.setRepository(medicineRepository);
         reader.setMethodName("findAll");
         reader.setArguments(List.of(specification));
@@ -98,9 +98,9 @@ public class MedicineExportBatchConfig {
 
     @Bean
     @StepScope
-    public FlatFileItemWriter<Medicine> csvMedicineWriter(@Value("#{jobParameters['filePath']}") String filePath) {
+    public FlatFileItemWriter<MedicineEntity> csvMedicineWriter(@Value("#{jobParameters['filePath']}") String filePath) {
 
-        FlatFileItemWriter<Medicine> writer = new FlatFileItemWriter<>();
+        FlatFileItemWriter<MedicineEntity> writer = new FlatFileItemWriter<>();
         writer.setResource(new FileSystemResource(filePath));
         writer.setAppendAllowed(false);
         writer.setHeaderCallback(writer1 -> writer1.write(
@@ -112,7 +112,7 @@ public class MedicineExportBatchConfig {
                     medicine.getId(), medicine.getCode(), medicine.getName(), medicine.getPrice(),
                     medicine.getQuantity(), medicine.getVat(), medicine.getNote(), medicine.getMaker(),
                     medicine.getOrigin(), medicine.getRetailProfit(),
-                    medicine.getKindOfMedicine() != null ? medicine.getKindOfMedicine().getName() : "",
+                    medicine.getKindOfMedicineEntity() != null ? medicine.getKindOfMedicineEntity().getName() : "",
                     medicine.getActiveElement()
             });
         }});

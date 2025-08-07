@@ -2,6 +2,7 @@ package com.mt.pharmacy_be.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Where;
 
 @Getter
 @Setter
@@ -9,15 +10,18 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Where(clause = "flag_deleted = false")
 @Table(name = "image_medicine")
-public class Image_Medicine {
+public class ImageMedicineEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String image_path;
+
     private boolean flag_deleted;
 
     @ManyToOne()
     @JoinColumn(name = "medicine_id")
-    private Medicine medicine;
+    private MedicineEntity medicineEntity;
 }

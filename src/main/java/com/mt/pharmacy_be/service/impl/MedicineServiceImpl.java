@@ -5,9 +5,9 @@ import com.mt.pharmacy_be.dto.medicineDTO.MedicineRequestDTO;
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineResponseDTO;
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineSearchRequestDTO;
 import com.mt.pharmacy_be.dto.unitDetailDTO.UnitDetailResponseDTO;
-import com.mt.pharmacy_be.entity.Image_Medicine;
-import com.mt.pharmacy_be.entity.Kind_Of_Medicine;
-import com.mt.pharmacy_be.entity.Medicine;
+import com.mt.pharmacy_be.entity.ImageMedicineEntity;
+import com.mt.pharmacy_be.entity.KindOfMedicineEntity;
+import com.mt.pharmacy_be.entity.MedicineEntity;
 import com.mt.pharmacy_be.entity.Unit_Detail;
 import com.mt.pharmacy_be.enums.ErrorCode;
 import com.mt.pharmacy_be.exception.ApiException;
@@ -51,7 +51,7 @@ public class MedicineServiceImpl implements MedicineService {
     @Override
     public PageResponse<?> getAll(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, pageSize);
-        Page<Medicine> medicinePage = medicineRepository.findAll(pageable);
+        Page<MedicineEntity> medicinePage = medicineRepository.findAll(pageable);
         List<MedicineResponseDTO> medicineResponseDTOList = medicinePage.map(this::getMedicineResponseDTO)
                 .stream().collect(Collectors.toList());
 
@@ -71,9 +71,9 @@ public class MedicineServiceImpl implements MedicineService {
      */
     @Override
     public MedicineResponseDTO getById(Long id) {
-        Medicine medicine = medicineRepository.findById(id)
+        MedicineEntity medicineEntity = medicineRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorCode.MEDICINE_NOT_FOUND));
-        return getMedicineResponseDTO(medicine);
+        return getMedicineResponseDTO(medicineEntity);
     }
 
     /**
@@ -85,20 +85,20 @@ public class MedicineServiceImpl implements MedicineService {
     @Override
     @Transactional
     public MedicineResponseDTO create(MedicineRequestDTO request) {
-        Kind_Of_Medicine kindOfMedicine = kindOfMedicineRepository.findById(request.getKindOfMedicineId())
+        KindOfMedicineEntity kindOfMedicineEntity = kindOfMedicineRepository.findById(request.getKindOfMedicineId())
                 .orElseThrow(() -> new ApiException(ErrorCode.KIND_OF_MEDICINE_NOT_FOUND));
 
-        Medicine medicine = medicineMapper.toMedicineEntity(request);
+        MedicineEntity medicineEntity = medicineMapper.toMedicineEntity(request);
 
-        saveMedicineImages(request, medicine);
+        saveMedicineImages(request, medicineEntity);
 
-        saveListUnitDetail(request, medicine);
+        saveListUnitDetail(request, medicineEntity);
 
-        medicine.setKindOfMedicine(kindOfMedicine);
-        medicine.setCode(String.valueOf(new Random().nextInt(1000000)));
-        medicineRepository.save(medicine);
+        medicineEntity.setKindOfMedicineEntity(kindOfMedicineEntity);
+        medicineEntity.setCode(String.valueOf(new Random().nextInt(1000000)));
+        medicineRepository.save(medicineEntity);
 
-        return getMedicineResponseDTO(medicine);
+        return getMedicineResponseDTO(medicineEntity);
     }
 
     /**
@@ -110,32 +110,32 @@ public class MedicineServiceImpl implements MedicineService {
     @Override
     @Transactional
     public MedicineResponseDTO update(Long id, MedicineRequestDTO request) {
-        Medicine medicine = medicineRepository.findById(id)
+        MedicineEntity medicineEntity = medicineRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorCode.MEDICINE_NOT_FOUND));
 
-        Kind_Of_Medicine kindOfMedicine = kindOfMedicineRepository.findById(request.getKindOfMedicineId())
+        KindOfMedicineEntity kindOfMedicineEntity = kindOfMedicineRepository.findById(request.getKindOfMedicineId())
                 .orElseThrow(() -> new ApiException(ErrorCode.KIND_OF_MEDICINE_NOT_FOUND));
 
-        Medicine medicineMap = medicineMapper.toMedicineEntity(request);
-        medicineMap.setId(id);
-        medicineMap.setCode(medicine.getCode());
-        medicineMap.setKindOfMedicine(kindOfMedicine);
+        MedicineEntity medicineEntityMap = medicineMapper.toMedicineEntity(request);
+        medicineEntityMap.setId(id);
+        medicineEntityMap.setCode(medicineEntity.getCode());
+        medicineEntityMap.setKindOfMedicineEntity(kindOfMedicineEntity);
 
-        medicineRepository.save(medicineMap);
+        medicineRepository.save(medicineEntityMap);
 
         if (!CollectionUtils.isEmpty(request.getUnitDetails())) {
-            unitDetailRepository.deleteAll(unitDetailRepository.findByMedicineId(id));
-            saveListUnitDetail(request, medicineMap);
+            unitDetailRepository.deleteAll(unitDetailRepository.findByMedicineEntityId(id));
+            saveListUnitDetail(request, medicineEntityMap);
         }
 
         if (!CollectionUtils.isEmpty(request.getImageUrls())) {
-            List<Image_Medicine> oldImages = imageMedicineRepository.findByMedicineId(id)
+            List<ImageMedicineEntity> oldImages = imageMedicineRepository.findByMedicineEntityId(id)
                     .orElse(List.of());
             imageMedicineRepository.deleteAll(oldImages);
-            saveMedicineImages(request, medicineMap);
+            saveMedicineImages(request, medicineEntityMap);
         }
 
-        return getMedicineResponseDTO(medicineMap);
+        return getMedicineResponseDTO(medicineEntityMap);
     }
 
     /**
@@ -146,10 +146,10 @@ public class MedicineServiceImpl implements MedicineService {
      */
     @Override
     public void delete(Long id) {
-        Medicine medicine = medicineRepository.findById(id)
+        MedicineEntity medicineEntity = medicineRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorCode.MEDICINE_NOT_FOUND));
-        medicine.setFlagDeleted(true);
-        medicineRepository.save(medicine);
+        medicineEntity.setFlagDeleted(true);
+        medicineRepository.save(medicineEntity);
     }
 
     /**
@@ -162,8 +162,8 @@ public class MedicineServiceImpl implements MedicineService {
     public PageResponse<?> searchMedicines(MedicineSearchRequestDTO request, int page, int pageSize) {
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, pageSize);
 
-        Specification<Medicine> specification = medicineSpecificationFactory.buildMedicineSpecification(request);
-        Page<Medicine> medicinePage = medicineRepository.findAll(specification, pageable);
+        Specification<MedicineEntity> specification = medicineSpecificationFactory.buildMedicineSpecification(request);
+        Page<MedicineEntity> medicinePage = medicineRepository.findAll(specification, pageable);
 
         List<MedicineResponseDTO> medicineResponseDTOList = medicinePage
                 .map(this::getMedicineResponseDTO)
@@ -183,12 +183,12 @@ public class MedicineServiceImpl implements MedicineService {
      * Date: 22/07/2025
      * Description: This method processes the unit details from the request,
      */
-    private void saveListUnitDetail(MedicineRequestDTO request, Medicine medicine) {
+    private void saveListUnitDetail(MedicineRequestDTO request, MedicineEntity medicineEntity) {
         List<Unit_Detail> unitDetails = request.getUnitDetails().stream()
                 .map(unitDetailDTO -> Unit_Detail.builder()
                         .conversion_unit(unitDetailDTO.getConversionUnit())
-                        .medicine(medicine)
-                        .unit(unitRepository.findById(unitDetailDTO.getUnitId())
+                        .medicineEntity(medicineEntity)
+                        .unitEntity(unitRepository.findById(unitDetailDTO.getUnitId())
                                 .orElseThrow(() -> new ApiException(ErrorCode.UNIT_NOT_FOUND)))
                         .build())
                 .collect(Collectors.toList());
@@ -201,23 +201,23 @@ public class MedicineServiceImpl implements MedicineService {
      * Date: 21/07/2025
      * Description: This method maps a Medicine entity to a MedicineResponseDTO,
      */
-    private MedicineResponseDTO getMedicineResponseDTO(Medicine medicine) {
-        MedicineResponseDTO responseDTO = medicineMapper.toMedicineResponseDTO(medicine);
+    private MedicineResponseDTO getMedicineResponseDTO(MedicineEntity medicineEntity) {
+        MedicineResponseDTO responseDTO = medicineMapper.toMedicineResponseDTO(medicineEntity);
 
-        List<UnitDetailResponseDTO> unitDetails = unitDetailRepository.findByMedicineId(medicine.getId())
+        List<UnitDetailResponseDTO> unitDetails = unitDetailRepository.findByMedicineEntityId(medicineEntity.getId())
                 .stream()
                 .map(unitDetail -> UnitDetailResponseDTO.builder()
                         .conversionUnit(unitDetail.getConversion_unit())
                         .id(unitDetail.getId())
-                        .unitId(unitDetail.getUnit().getId())
-                        .unitName(unitDetail.getUnit().getName())
+                        .unitId(unitDetail.getUnitEntity().getId())
+                        .unitName(unitDetail.getUnitEntity().getName())
                         .build())
                 .collect(Collectors.toList());
 
-        List<String> imagePaths = imageMedicineRepository.findByMedicineId(medicine.getId())
+        List<String> imagePaths = imageMedicineRepository.findByMedicineEntityId(medicineEntity.getId())
                 .orElseThrow(() -> new ApiException(ErrorCode.IMAGE_NOT_FOUND))
                 .stream()
-                .map(Image_Medicine::getImage_path)
+                .map(ImageMedicineEntity::getImage_path)
                 .collect(Collectors.toList());
 
         responseDTO.setUnitDetails(unitDetails);
@@ -232,11 +232,11 @@ public class MedicineServiceImpl implements MedicineService {
      * Date: 22/07/2025
      * Description: This method uploads images to the cloud and saves their URLs in the database.
      */
-    private void saveMedicineImages(MedicineRequestDTO requestDTO, Medicine medicine) {
-        List<Image_Medicine> imageMedicines = requestDTO.getImageUrls().stream()
-                .map(url -> Image_Medicine.builder()
+    private void saveMedicineImages(MedicineRequestDTO requestDTO, MedicineEntity medicineEntity) {
+        List<ImageMedicineEntity> imageMedicines = requestDTO.getImageUrls().stream()
+                .map(url -> ImageMedicineEntity.builder()
                         .image_path(url)
-                        .medicine(medicine)
+                        .medicineEntity(medicineEntity)
                         .flag_deleted(false)
                         .build())
                 .collect(Collectors.toList());

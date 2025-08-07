@@ -10,23 +10,35 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "medicine")
 @Where(clause = "flag_deleted = false")
-public class Medicine {
+public class MedicineEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String code;
+
     private String name;
+
     private Double price;
+
     private Long quantity;
+
     private Float vat;
+
     private String note;
+
     private String maker;
+
     private String origin;
+
     private Float retailProfit;
+
     @ManyToOne()
     @JoinColumn(name = "kind_of_medicine_id")
-    private Kind_Of_Medicine kindOfMedicine;
+    private KindOfMedicineEntity kindOfMedicineEntity;
+
     private boolean flagDeleted;
+
     private String activeElement;
 
 }

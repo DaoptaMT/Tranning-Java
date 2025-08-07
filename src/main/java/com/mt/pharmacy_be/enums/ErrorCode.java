@@ -76,6 +76,10 @@ public enum ErrorCode {
 
     // Kind of Medicine 5***
     KIND_OF_MEDICINE_NOT_FOUND(5000, "Kind of medicine not found", HttpStatus.BAD_REQUEST),
+    KIND_NOT_FOUND(5001, "Kind not found", HttpStatus.BAD_REQUEST),
+    CODE_INVALID(5002, "Code invalid ", HttpStatus.BAD_REQUEST),
+    NAME_INVALID(5003, "Name invalid ", HttpStatus.BAD_REQUEST),
+    KIND_EXISTED(5004, "Kind of medicine already exists", HttpStatus.BAD_REQUEST),
 
     // Unit 6***
     UNIT_NOT_FOUND(6000, "Unit not found", HttpStatus.BAD_REQUEST),
@@ -88,7 +92,8 @@ public enum ErrorCode {
     // Batch Import 8***
     CSV_INVALID(8000, "Please upload a CSV file", HttpStatus.BAD_REQUEST),
     CSV_ALREADY_PROCESSED(8001, "This file has already been processed", HttpStatus.BAD_REQUEST),
-    CSV_DOWNLOAD_INVALID(8002, "CSV file is invalid or corrupted", HttpStatus.BAD_REQUEST)
+    CSV_DOWNLOAD_INVALID(8002, "CSV file is invalid or corrupted", HttpStatus.BAD_REQUEST),
+
     ;
 
     Integer code;

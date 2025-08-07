@@ -1,6 +1,6 @@
 package com.mt.pharmacy_be.repository.specification;
 
-import com.mt.pharmacy_be.entity.Medicine;
+import com.mt.pharmacy_be.entity.MedicineEntity;
 import org.springframework.data.jpa.domain.Specification;
 
 public class MedicineSpecification {
@@ -11,7 +11,7 @@ public class MedicineSpecification {
      * Date: 16/07/2025
      * Description: Returns a Specification that checks if the medicine's code contains the given value.
      */
-    public static Specification<Medicine> hasCode(String code) {
+    public static Specification<MedicineEntity> hasCode(String code) {
         return (root, query, cb) ->
                 code == null ? null : cb.like(cb.lower(root.get("code")), "%" + code.toLowerCase() + "%");
     }
@@ -22,7 +22,7 @@ public class MedicineSpecification {
      * Date: 16/07/2025
      * Description: Returns a Specification that checks if the medicine's name contains the given value.
      */
-    public static Specification<Medicine> hasName(String name) {
+    public static Specification<MedicineEntity> hasName(String name) {
         return (root, query, cb) ->
                 name == null ? null : cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%");
     }
@@ -33,7 +33,7 @@ public class MedicineSpecification {
      * Date: 16/07/2025
      * Description: Returns a Specification that checks if the medicine's price is greater than or equal to the given value.
      */
-    public static Specification<Medicine> minPrice(Double minPrice) {
+    public static Specification<MedicineEntity> minPrice(Double minPrice) {
         return (root, query, cb) ->
                 minPrice == null ? null : cb.greaterThanOrEqualTo(root.get("price"), minPrice);
     }
@@ -44,7 +44,7 @@ public class MedicineSpecification {
      * Date: 16/07/2025
      * Description: Returns a Specification that checks if the medicine's price is less than or equal to the given value.
      */
-    public static Specification<Medicine> maxPrice(Double maxPrice) {
+    public static Specification<MedicineEntity> maxPrice(Double maxPrice) {
         return (root, query, cb) ->
                 maxPrice == null ? null : cb.lessThanOrEqualTo(root.get("price"), maxPrice);
     }
@@ -55,7 +55,7 @@ public class MedicineSpecification {
      * Date: 16/07/2025
      * Description: Returns a Specification that checks if the medicine's quantity is greater than or equal to the given value.
      */
-    public static Specification<Medicine> minQuantity(Long minQuantity) {
+    public static Specification<MedicineEntity> minQuantity(Long minQuantity) {
         return (root, query, cb) ->
                 minQuantity == null ? null : cb.greaterThanOrEqualTo(root.get("quantity"), minQuantity);
     }
@@ -66,7 +66,7 @@ public class MedicineSpecification {
      * Date: 16/07/2025
      * Description: Returns a Specification that checks if the medicine's quantity is less than or equal to the given value.
      */
-    public static Specification<Medicine> maxQuantity(Long maxQuantity) {
+    public static Specification<MedicineEntity> maxQuantity(Long maxQuantity) {
         return (root, query, cb) ->
                 maxQuantity == null ? null : cb.lessThanOrEqualTo(root.get("quantity"), maxQuantity);
     }
@@ -77,7 +77,7 @@ public class MedicineSpecification {
      * Date: 16/07/2025
      * Description: Returns a Specification that checks if the medicine's maker contains the given value.
      */
-    public static Specification<Medicine> hasMaker(String maker) {
+    public static Specification<MedicineEntity> hasMaker(String maker) {
         return (root, query, cb) ->
                 maker == null ? null : cb.like(cb.lower(root.get("maker")), "%" + maker.toLowerCase() + "%");
     }
@@ -88,7 +88,7 @@ public class MedicineSpecification {
      * Date: 16/07/2025
      * Description: Returns a Specification that checks if the medicine's origin contains the given value.
      */
-    public static Specification<Medicine> hasOrigin(String origin) {
+    public static Specification<MedicineEntity> hasOrigin(String origin) {
         return (root, query, cb) ->
                 origin == null ? null : cb.like(cb.lower(root.get("origin")), "%" + origin.toLowerCase() + "%");
     }
@@ -99,7 +99,7 @@ public class MedicineSpecification {
      * Date: 16/07/2025
      * Description: Returns a Specification that checks if the medicine's active element contains the given value.
      */
-    public static Specification<Medicine> hasActiveElement(String activeElement) {
+    public static Specification<MedicineEntity> hasActiveElement(String activeElement) {
         return (root, query, cb) ->
                 activeElement == null ? null : cb.like(cb.lower(root.get("activeElement")), "%" + activeElement.toLowerCase() + "%");
     }
@@ -110,7 +110,7 @@ public class MedicineSpecification {
      * Date: 16/07/2025
      * Description: Returns a Specification that checks if the medicine belongs to the specified kind of medicine.
      */
-    public static Specification<Medicine> hasKindOfMedicine(Long kindOfMedicineId) {
+    public static Specification<MedicineEntity> hasKindOfMedicine(Long kindOfMedicineId) {
         return (root, query, cb) ->
                 kindOfMedicineId == null ? null :
                         cb.equal(root.get("kindOfMedicine").get("id"), kindOfMedicineId);
@@ -122,7 +122,7 @@ public class MedicineSpecification {
      * Date: 16/07/2025
      * Description: Returns a Specification that applies sorting by price based on the order ("ASC" or "DESC").
      */
-    public static Specification<Medicine> sortPrice(String order) {
+    public static Specification<MedicineEntity> sortPrice(String order) {
         return (root, query, cb) -> {
             if (order == null) return null;
             if ("ASC".equalsIgnoreCase(order)) {

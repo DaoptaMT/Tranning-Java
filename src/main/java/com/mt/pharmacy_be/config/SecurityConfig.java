@@ -43,13 +43,15 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "v3/api-docs/**",
                                 "/openapi.yml",
+                                "/api/v1/kinds-of-medicine/**",
                                 "/api/v1/medicines/export/progress",
                                 "/api/v1/medicines/search",
                                 "/api/v1/medicines/{id}"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/medicines").permitAll()
                         .requestMatchers("/api/v1/files/upload",
-                                "/api/v1/medicines/**").hasAuthority(RoleType.EMPLOYEE.name())
+                                "/api/v1/medicines/**").hasAnyAuthority(RoleType.EMPLOYEE.name(),
+                                RoleType.ADMIN.name())
                         .anyRequest().authenticated())
                 .sessionManagement(session
                         -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

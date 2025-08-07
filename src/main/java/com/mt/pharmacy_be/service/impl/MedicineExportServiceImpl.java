@@ -3,7 +3,7 @@ package com.mt.pharmacy_be.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mt.pharmacy_be.dto.export.ExportProgressDTO;
 import com.mt.pharmacy_be.dto.medicineDTO.MedicineSearchRequestDTO;
-import com.mt.pharmacy_be.entity.Medicine;
+import com.mt.pharmacy_be.entity.MedicineEntity;
 import com.mt.pharmacy_be.enums.ErrorCode;
 import com.mt.pharmacy_be.enums.ExportStatus;
 import com.mt.pharmacy_be.exception.ApiException;
@@ -191,10 +191,10 @@ public class MedicineExportServiceImpl implements MedicineExportService {
         notifyExportStarted(fileName, filePath, startMessage);
 
         try {
-            Specification<Medicine> specification = medicineSpecificationFactory.buildMedicineSpecification(request);
-            List<Medicine> medicinePage = medicineRepository.findAll(specification);
+            Specification<MedicineEntity> specification = medicineSpecificationFactory.buildMedicineSpecification(request);
+            List<MedicineEntity> medicineEntityPage = medicineRepository.findAll(specification);
 
-            if (medicinePage.isEmpty()) {
+            if (medicineEntityPage.isEmpty()) {
                 notifyNoDataAvailable(fileName, filePath, "No data matches the specified filters");
                 return;
             }
