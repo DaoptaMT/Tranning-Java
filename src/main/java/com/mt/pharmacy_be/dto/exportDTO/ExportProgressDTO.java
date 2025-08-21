@@ -1,4 +1,4 @@
-package com.mt.pharmacy_be.dto.export;
+package com.mt.pharmacy_be.dto.exportDTO;
 
 import lombok.*;
 

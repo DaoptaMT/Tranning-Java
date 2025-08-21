@@ -1,6 +1,6 @@
 package com.mt.pharmacy_be.service.impl;
 
-import com.mt.pharmacy_be.dto.export.ExportProgressDTO;
+import com.mt.pharmacy_be.dto.exportDTO.ExportProgressDTO;
 import com.mt.pharmacy_be.service.ExportEventService;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;

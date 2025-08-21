@@ -46,7 +46,8 @@ public class SecurityConfig {
                                 "/api/v1/kinds-of-medicine/**",
                                 "/api/v1/medicines/export/progress",
                                 "/api/v1/medicines/search",
-                                "/api/v1/medicines/{id}"
+                                "/api/v1/medicines/{id}",
+                                "/api/v1/units/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/medicines").permitAll()
                         .requestMatchers("/api/v1/files/upload",
